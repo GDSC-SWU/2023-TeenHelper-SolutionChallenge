@@ -41,6 +41,11 @@ dependencies:
   geolocator: ^9.0.2
   http: ^0.13.5
   floating_search_bar: ^0.3.0
+  google_sign_in: ^5.4.4
+  firebase_auth: ^4.2.6
+  firebase_core: ^2.5.0
+  cloud_firestore: ^4.4.1
+  fluttertoast: ^8.2.1
   flutter:
     sdk: flutter
 
@@ -87,6 +92,25 @@ flutter:
     - images/marker.png
     - images/location_current_icon.png
     - images/map_icon_mark.png
+    - images/login_button.png
+    - images/login_image_complete.png
+    - images/join_button.png
+    - images/join_input_button.png
+    - images/nick_button.png
+    - images/male_on.png
+    - images/male_off.png
+    - images/female_on.png
+    - images/female_off.png
+    - images/loading.gif
+    - images/home_on.png
+    - images/home_off.png
+    - images/map_on.png
+    - images/map_off.png
+    - images/chat_on.png
+    - images/chat_off.png
+    - images/mypage_on.png
+    - images/mypage_off.png
+    - images/splash_logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
