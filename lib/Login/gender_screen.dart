@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google/navigationbar_screen.dart';
 
 class gender_screen extends StatefulWidget {
@@ -17,6 +18,18 @@ class _genderscreen extends State<gender_screen> {
     await FirebaseFirestore.instance.collection("user").doc(FirebaseAuth.instance.currentUser!.uid).update({
       "gender": gender,
     });
+  }
+
+  void showToast(String text)
+  {
+    Fluttertoast.showToast(
+        msg: text,
+        gravity: ToastGravity.CENTER,
+        backgroundColor: Color(0xFFE76D3B),
+        fontSize: ScreenUtil().setSp(16),
+        textColor: Colors.white,
+        toastLength: Toast.LENGTH_SHORT
+    );
   }
 
   var male_image = true;
@@ -54,6 +67,7 @@ class _genderscreen extends State<gender_screen> {
                           setState((){
                             male_image = !male_image;
                           }),
+                          male_image == true && female_image == true ? showToast("성별을 선택해주세요.") : "",
                           male_image == false && female_image == true ? UserWrite("male") : UserWrite("female")
                         },
                       ),
@@ -76,8 +90,8 @@ class _genderscreen extends State<gender_screen> {
                   child: InkWell(
                     child: Image.asset('images/join_button.png'),
                     onTap: () => {
-                      Navigator.pushReplacement(
-                          context, MaterialPageRoute(builder: (_) => navigationbar_screen()))
+                      male_image == true && female_image == true ? showToast("성별을 선택해주세요.") : Navigator.pushReplacement(
+                          context, MaterialPageRoute(builder: (_) => navigationbar_screen())),
                     },
                   )
               )

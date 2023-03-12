@@ -18,19 +18,20 @@ class _nickscreen extends State<nick_screen> {
   Future<void> UserWrite(String nickname) async {
     await FirebaseFirestore.instance.collection("user").doc(FirebaseAuth.instance.currentUser!.uid).set({
       "uid": FirebaseAuth.instance.currentUser!.uid,
+      "email": FirebaseAuth.instance.currentUser!.email,
       "nickname": nickname,
     });
     Navigator.push(
         context, MaterialPageRoute(builder: (_) => gender_screen()));
   }
 
-  void showToast()
+  void showToast(String text)
   {
    Fluttertoast.showToast(
-      msg: "빈칸을 채워주세요.",
-     gravity: ToastGravity.BOTTOM,
+      msg: text,
+     gravity: ToastGravity.CENTER,
      backgroundColor: Color(0xFFE76D3B),
-     fontSize: 20.sp,
+     fontSize: ScreenUtil().setSp(16),
      textColor: Colors.white,
      toastLength: Toast.LENGTH_SHORT
     );
@@ -52,14 +53,14 @@ class _nickscreen extends State<nick_screen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Container(
-                  margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(16), ScreenUtil().setHeight(104), ScreenUtil().setWidth(90), 0),
+                  margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(18), ScreenUtil().setHeight(104), ScreenUtil().setWidth(90), 0),
                   child: Text('닉네임을 설정해주세요',
                         style: TextStyle(fontSize: ScreenUtil().setSp(24), fontWeight: FontWeight.w700, color: Color(0xff353535)),
                         )
               ),
               Container(
-                  margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(18), ScreenUtil().setHeight(10), ScreenUtil().setWidth(110), 0),
-                  child: Text('닉네임은 마이페이지에서 수정 가능합니다.',
+                  margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(16), ScreenUtil().setHeight(10), ScreenUtil().setWidth(130), 0),
+                  child: Text('닉네임은 10자 이하로 설정해주세요.',
                     style: TextStyle(fontSize: ScreenUtil().setSp(12), fontWeight: FontWeight.w200, color: Color(0xff353535)),
                   )
               ),
@@ -84,10 +85,12 @@ class _nickscreen extends State<nick_screen> {
                     child: InkWell(
                       child: Image.asset('images/nick_button.png'),
                       onTap: () => {
-                        _nickTextEditController.text.length > 0 ? UserWrite(_nickTextEditController.text) : showToast(),
-                      },
+                        _nickTextEditController.text.length > 0 && _nickTextEditController.text.length <=10 ? UserWrite(_nickTextEditController.text) : "",
+                        _nickTextEditController.text.length > 0 ? "" : showToast("닉네임을 입력해주세요."),
+                        _nickTextEditController.text.length > 10 ? showToast("닉네임을 10자 이하로 설정해주세요.") : ""
+                      }
                     )
-                ),
+                )
               )
             ],
           ),
