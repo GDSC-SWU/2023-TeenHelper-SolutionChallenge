@@ -6,6 +6,7 @@ import 'package:google/Login/loading.dart';
 import 'package:google/map/detail_model.dart';
 import 'package:google/map/review_model.dart';
 import 'package:google/map/review_write_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class map_detail extends StatefulWidget {
 
@@ -124,7 +125,7 @@ class _map_detail extends State<map_detail> {
                       InkWell(
                         child: Image.asset('images/detail_btn_call.png', width: ScreenUtil().setWidth(160), height: ScreenUtil().setHeight(34)),
                         onTap: () => {
-
+                        launch("tel://${_myphnumlist[0]}"),
                         },),
                       Container(
                         margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(8), ScreenUtil().setHeight(0), ScreenUtil().setWidth(16), ScreenUtil().setHeight(0)),

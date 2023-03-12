@@ -46,7 +46,8 @@ dependencies:
   firebase_core: ^2.5.0
   cloud_firestore: ^4.4.1
   fluttertoast: ^8.2.1
-  flutter_dotenv: 5.0.2
+  flutter_dotenv: ^5.0.2
+  url_launcher: ^6.1.10
   flutter:
     sdk: flutter
 
