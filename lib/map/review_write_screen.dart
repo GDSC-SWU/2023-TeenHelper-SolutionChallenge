@@ -2,15 +2,33 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 class review_write_screen extends StatefulWidget {
+
+  final String name;
+  final int id;
+  const review_write_screen(this.name, this.id);
+
 
   @override
   _review_write_screen createState() => _review_write_screen();
 }
 
 class _review_write_screen extends State<review_write_screen> {
+
+  void showToast(String text)
+  {
+    Fluttertoast.showToast(
+        msg: text,
+        gravity: ToastGravity.CENTER,
+        backgroundColor: Color(0xFFE76D3B),
+        fontSize: ScreenUtil().setSp(16),
+        textColor: Colors.white,
+        toastLength: Toast.LENGTH_SHORT
+    );
+  }
 
   final _reviewTextEditController = TextEditingController();
 
@@ -21,12 +39,14 @@ class _review_write_screen extends State<review_write_screen> {
     return strToday;
   }
 
-  Future<void> reviewWrite(String content, String hospital, String shelter) async {
+  Future<void> reviewWrite(String content, String hospital, int hospitalId) async {
     await FirebaseFirestore.instance.collection("review").add({
       "uid": FirebaseAuth.instance.currentUser!.uid,
       "content": content,
-      "hospital": hospital,
-      "shelter" : shelter,
+      "hospital_subject": hospital,
+      "hospital_id" : hospitalId,
+      "shelter_id" : widget.id,
+      "shelter_name" : widget.name,
       "date" : getToday(),
       "timeStamp" : Timestamp.now()
     });
@@ -35,6 +55,7 @@ class _review_write_screen extends State<review_write_screen> {
   }
 
   String hospital = "";
+  int hospitalId = 0;
   bool hospital_1 = false;
   bool hospital_2 = false;
   bool hospital_3 = false;
@@ -58,7 +79,7 @@ class _review_write_screen extends State<review_write_screen> {
               Navigator.pop(context)
             },
           ),
-          title: Text('의정부시청소년쉼터',
+          title: Text(widget.name,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Color(0xff353535),
@@ -100,6 +121,7 @@ class _review_write_screen extends State<review_write_screen> {
                                     onTap: () => {
                                       setState((){
                                         hospital = "내과";
+                                        hospitalId = 1;
                                         hospital_1 = !hospital_1;
                                         hospital_2 == true ? (hospital_2 = !hospital_2) : '';
                                         hospital_3 == true ? (hospital_3 = !hospital_3) : '';
@@ -120,6 +142,7 @@ class _review_write_screen extends State<review_write_screen> {
                                     onTap: () => {
                                       setState((){
                                         hospital = "산부인과";
+                                        hospitalId = 2;
                                         hospital_2 = !hospital_2;
                                         hospital_1 == true ? (hospital_1 = !hospital_1) : '';
                                         hospital_3 == true ? (hospital_3 = !hospital_3) : '';
@@ -140,6 +163,7 @@ class _review_write_screen extends State<review_write_screen> {
                                     onTap: () => {
                                       setState((){
                                         hospital = "치과";
+                                        hospitalId = 3;
                                         hospital_3 = !hospital_3;
                                         hospital_1 == true ? (hospital_1 = !hospital_1) : '';
                                         hospital_2 == true ? (hospital_2 = !hospital_2) : '';
@@ -167,6 +191,7 @@ class _review_write_screen extends State<review_write_screen> {
                                     onTap: () => {
                                       setState((){
                                         hospital = "정신과";
+                                        hospitalId = 4;
                                         hospital_4 = !hospital_4;
                                         hospital_2 == true ? (hospital_2 = !hospital_2) : '';
                                         hospital_3 == true ? (hospital_3 = !hospital_3) : '';
@@ -187,6 +212,7 @@ class _review_write_screen extends State<review_write_screen> {
                                     onTap: () => {
                                       setState((){
                                         hospital = "피부과";
+                                        hospitalId = 5;
                                         hospital_5 = !hospital_5;
                                         hospital_1 == true ? (hospital_1 = !hospital_1) : '';
                                         hospital_3 == true ? (hospital_3 = !hospital_3) : '';
@@ -207,6 +233,7 @@ class _review_write_screen extends State<review_write_screen> {
                                     onTap: () => {
                                       setState((){
                                         hospital = "안과";
+                                        hospitalId = 6;
                                         hospital_6 = !hospital_6;
                                         hospital_1 == true ? (hospital_1 = !hospital_1) : '';
                                         hospital_2 == true ? (hospital_2 = !hospital_2) : '';
@@ -234,6 +261,7 @@ class _review_write_screen extends State<review_write_screen> {
                                     onTap: () => {
                                       setState((){
                                         hospital = "정형외과";
+                                        hospitalId = 7;
                                         hospital_7 = !hospital_7;
                                         hospital_2 == true ? (hospital_2 = !hospital_2) : '';
                                         hospital_3 == true ? (hospital_3 = !hospital_3) : '';
@@ -254,6 +282,7 @@ class _review_write_screen extends State<review_write_screen> {
                                     onTap: () => {
                                       setState((){
                                         hospital = "이비인후과";
+                                        hospitalId = 8;
                                         hospital_8 = !hospital_8;
                                         hospital_1 == true ? (hospital_1 = !hospital_1) : '';
                                         hospital_3 == true ? (hospital_3 = !hospital_3) : '';
@@ -274,6 +303,7 @@ class _review_write_screen extends State<review_write_screen> {
                                     onTap: () => {
                                       setState((){
                                         hospital = "안과";
+                                        hospitalId = 9;
                                         hospital_9 = !hospital_9;
                                         hospital_1 == true ? (hospital_1 = !hospital_1) : '';
                                         hospital_2 == true ? (hospital_2 = !hospital_2) : '';
@@ -340,7 +370,9 @@ class _review_write_screen extends State<review_write_screen> {
                       child: InkWell(
                         child: Image.asset('images/review_button.png'),
                         onTap: () => {
-                          reviewWrite(_reviewTextEditController.text, hospital, '의정부시청소년쉼터')
+                          hospital.length > 0 && hospitalId > 0 ? "" : showToast("어떤 의료적 도움을 받았는지 선택해주세요."),
+                          _reviewTextEditController.text.length > 0 ? "" : showToast("후기를 작성해주세요."),
+                          hospital.length > 0 && _reviewTextEditController.text.length > 0 ? reviewWrite(_reviewTextEditController.text, hospital, hospitalId) : ""
                         },
                       )
                   ),

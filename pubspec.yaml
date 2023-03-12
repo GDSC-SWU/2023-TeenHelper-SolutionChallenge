@@ -46,6 +46,7 @@ dependencies:
   firebase_core: ^2.5.0
   cloud_firestore: ^4.4.1
   fluttertoast: ^8.2.1
+  flutter_dotenv: 5.0.2
   flutter:
     sdk: flutter
 
@@ -159,6 +160,7 @@ flutter:
     - images/review_on_9.png
     - images/staron_btn.png
     - images/staroff_btn.png
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
