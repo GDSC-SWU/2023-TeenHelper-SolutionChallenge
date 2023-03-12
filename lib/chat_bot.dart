@@ -84,20 +84,32 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
     ScreenUtil.init(context);
     return Scaffold(
       backgroundColor: Color(0xFFFFF7F3),
-      appBar: AppBar(
-        elevation: 0,
-        title: Text('TeenHelper'),
-        centerTitle: true,
-        leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-              size: 5 * 5,
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(kToolbarHeight),
+          child: Container(
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                offset: Offset(0, 0.1),
+                blurRadius: 4.0,
+              )
+            ]),
+            child: AppBar(
+              elevation: 0,
+              title: Text('TeenHelper'),
+              centerTitle: true,
+              shadowColor: Color(0xFF353535),
+              leading: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    color: Color(0xFF0E0D0D),
+                    size: 5 * 5,
+                  ),
+                  onPressed: () {
+                    print("Icon Button clicked");
+                  }),
             ),
-            onPressed: () {
-              print("Icon Button clicked");
-            }),
-      ),
+          )),
       body: Stack(
         children: [
           Column(
