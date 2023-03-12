@@ -28,7 +28,7 @@ class _nickscreen extends State<nick_screen> {
   {
    Fluttertoast.showToast(
       msg: "빈칸을 채워주세요.",
-     gravity: ToastGravity.BOTTOM,
+     gravity: ToastGravity.CENTER,
      backgroundColor: Color(0xFFE76D3B),
      fontSize: 20.sp,
      textColor: Colors.white,
