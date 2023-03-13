@@ -18,6 +18,7 @@ class _map_detail extends State<map_detail> {
 
   int id = 42;
   int hospital = 1;
+  String hospital_subject = "내과";
   bool hospital_1 = false;
   bool hospital_2 = false;
   bool hospital_3 = false;
@@ -244,185 +245,187 @@ class _map_detail extends State<map_detail> {
                           ),
                         )
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(top: ScreenUtil().setHeight(15)),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                  margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(16), ScreenUtil().setHeight(4), 0, 0),
-                                  child: Image.asset('images/detail_icon_time.png')),
-                              Container(
-                                  margin: EdgeInsets.only(left: ScreenUtil().setWidth(8)),
-                                  child: Row (
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Text("월",
-                                          style: TextStyle(
-                                            color: Color(0xff6B6B6B),
-                                            fontSize: 14,
-                                          )),
-                                      Container(
-                                        margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(8), ScreenUtil().setHeight(3), 0, 0),
-                                        child: Text(
-                                          _mytimelist[0],
-                                          style: TextStyle(
-                                            color: Color(0xFF353535),
-                                            fontSize: 14,),),
-                                      )
-                                    ],
-                                  )
-                              )
-                            ],
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(top: ScreenUtil().setHeight(15)),
+                            child: Row(
+                              // mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                    margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(16), ScreenUtil().setHeight(4), 0, 0),
+                                    child: Image.asset('images/detail_icon_time.png')),
+                                Container(
+                                    margin: EdgeInsets.only(left: ScreenUtil().setWidth(8)),
+                                    child: Row (
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text("월",
+                                            style: TextStyle(
+                                              color: Color(0xff6B6B6B),
+                                              fontSize: 14,
+                                            )),
+                                        Container(
+                                          margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(8), ScreenUtil().setHeight(3), 0, 0),
+                                          child: Text(
+                                            _mytimelist[0],
+                                            style: TextStyle(
+                                              color: Color(0xFF353535),
+                                              fontSize: 14,),),
+                                        )
+                                      ],
+                                    )
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                        Container(
-                            margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(38), ScreenUtil().setHeight(4), 0, 0),
-                            child: Row (
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text("화",
-                                    style: TextStyle(
-                                      color: Color(0xff6B6B6B),
-                                      fontSize: 14,
-                                    )),
-                                Container(
-                                  margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(8), ScreenUtil().setHeight(3), 0, 0),
-                                  child: Text(
-                                    _mytimelist[0],
-                                    style: TextStyle(
-                                      color: Color(0xFF353535),
-                                      fontSize: 14,),),
-                                )
-                              ],
-                            )
-                        ),
-                        Container(
-                            margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(38), ScreenUtil().setHeight(4), 0, 0),
-                            child: Row (
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text("수",
-                                    style: TextStyle(
-                                      color: Color(0xff6B6B6B),
-                                      fontSize: 14,
-                                    )),
-                                Container(
-                                  margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(8), ScreenUtil().setHeight(3), 0, 0),
-                                  child: Text(
-                                    _mytimelist[0],
-                                    style: TextStyle(
-                                      color: Color(0xFF353535),
-                                      fontSize: 14,),),
-                                )
-                              ],
-                            )
-                        ),
-                        Container(
-                            margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(38), ScreenUtil().setHeight(4), 0, 0),
-                            child: Row (
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text("목",
-                                    style: TextStyle(
-                                      color: Color(0xff6B6B6B),
-                                      fontSize: 14,
-                                    )),
-                                Container(
-                                  margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(8), ScreenUtil().setHeight(3), 0, 0),
-                                  child: Text(
-                                    _mytimelist[0],
-                                    style: TextStyle(
-                                      color: Color(0xFF353535),
-                                      fontSize: 14,),),
-                                )
-                              ],
-                            )
-                        ),
-                        Container(
-                            margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(38), ScreenUtil().setHeight(4), 0, 0),
-                            child: Row (
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text("금",
-                                    style: TextStyle(
-                                      color: Color(0xff6B6B6B),
-                                      fontSize: 14,
-                                    )),
-                                Container(
-                                  margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(8), ScreenUtil().setHeight(3), 0, 0),
-                                  child: Text(
-                                    _mytimelist[0],
-                                    style: TextStyle(
-                                      color: Color(0xFF353535),
-                                      fontSize: 14,),),
-                                )
-                              ],
-                            )
-                        ),
-                        Container(
-                            margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(38), ScreenUtil().setHeight(4), 0, 0),
-                            child: Row (
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text("토",
-                                    style: TextStyle(
-                                      color: Color(0xff6B6B6B),
-                                      fontSize: 14,
-                                    )),
-                                Container(
-                                  margin: EdgeInsets.only(left: ScreenUtil().setWidth(8)),
-                                  child: Text(
-                                    _mytimelist[0],
-                                    style: TextStyle(
-                                      color: Color(0xFF353535),
-                                      fontSize: 14,),),
-                                )
-                              ],
-                            )
-                        ),
-                        Container(
-                            margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(38), ScreenUtil().setHeight(4), 0, 0),
-                            child: Row (
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text("일",
-                                    style: TextStyle(
-                                      color: Color(0xFF6B6B6B),
-                                      fontSize: 14,
-                                    )),
-                                Container(
-                                  margin: EdgeInsets.only(left: ScreenUtil().setWidth(8)),
-                                  child: Text(
-                                    _mytimelist[0],
-                                    style: TextStyle(
-                                      color: Color(0xFF353535),
-                                      fontSize: 14,),),
-                                )
-                              ],
-                            )
-                        ),
-                      ],
+                          Container(
+                              margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(38), ScreenUtil().setHeight(4), 0, 0),
+                              child: Row (
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text("화",
+                                      style: TextStyle(
+                                        color: Color(0xff6B6B6B),
+                                        fontSize: 14,
+                                      )),
+                                  Container(
+                                    margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(8), ScreenUtil().setHeight(3), 0, 0),
+                                    child: Text(
+                                      _mytimelist[0],
+                                      style: TextStyle(
+                                        color: Color(0xFF353535),
+                                        fontSize: 14,),),
+                                  )
+                                ],
+                              )
+                          ),
+                          Container(
+                              margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(38), ScreenUtil().setHeight(4), 0, 0),
+                              child: Row (
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text("수",
+                                      style: TextStyle(
+                                        color: Color(0xff6B6B6B),
+                                        fontSize: 14,
+                                      )),
+                                  Container(
+                                    margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(8), ScreenUtil().setHeight(3), 0, 0),
+                                    child: Text(
+                                      _mytimelist[0],
+                                      style: TextStyle(
+                                        color: Color(0xFF353535),
+                                        fontSize: 14,),),
+                                  )
+                                ],
+                              )
+                          ),
+                          Container(
+                              margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(38), ScreenUtil().setHeight(4), 0, 0),
+                              child: Row (
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text("목",
+                                      style: TextStyle(
+                                        color: Color(0xff6B6B6B),
+                                        fontSize: 14,
+                                      )),
+                                  Container(
+                                    margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(8), ScreenUtil().setHeight(3), 0, 0),
+                                    child: Text(
+                                      _mytimelist[0],
+                                      style: TextStyle(
+                                        color: Color(0xFF353535),
+                                        fontSize: 14,),),
+                                  )
+                                ],
+                              )
+                          ),
+                          Container(
+                              margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(38), ScreenUtil().setHeight(4), 0, 0),
+                              child: Row (
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text("금",
+                                      style: TextStyle(
+                                        color: Color(0xff6B6B6B),
+                                        fontSize: 14,
+                                      )),
+                                  Container(
+                                    margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(8), ScreenUtil().setHeight(3), 0, 0),
+                                    child: Text(
+                                      _mytimelist[0],
+                                      style: TextStyle(
+                                        color: Color(0xFF353535),
+                                        fontSize: 14,),),
+                                  )
+                                ],
+                              )
+                          ),
+                          Container(
+                              margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(38), ScreenUtil().setHeight(4), 0, 0),
+                              child: Row (
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text("토",
+                                      style: TextStyle(
+                                        color: Color(0xff6B6B6B),
+                                        fontSize: 14,
+                                      )),
+                                  Container(
+                                    margin: EdgeInsets.only(left: ScreenUtil().setWidth(8)),
+                                    child: Text(
+                                      _mytimelist[0],
+                                      style: TextStyle(
+                                        color: Color(0xFF353535),
+                                        fontSize: 14,),),
+                                  )
+                                ],
+                              )
+                          ),
+                          Container(
+                              margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(38), ScreenUtil().setHeight(4), 0, 0),
+                              child: Row (
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text("일",
+                                      style: TextStyle(
+                                        color: Color(0xFF6B6B6B),
+                                        fontSize: 14,
+                                      )),
+                                  Container(
+                                    margin: EdgeInsets.only(left: ScreenUtil().setWidth(8)),
+                                    child: Text(
+                                      _mytimelist[0],
+                                      style: TextStyle(
+                                        color: Color(0xFF353535),
+                                        fontSize: 14,),),
+                                  )
+                                ],
+                              )
+                          ),
+                        ],
+                      ),
                     )
                 ),
                 Container(
@@ -580,7 +583,6 @@ class _map_detail extends State<map_detail> {
                             child: Text('오류가 발생했습니다.'),);
                         } else {
                           List<ReviewModel> review = asyncSnapshot.data!;
-
                           return Column (
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -606,6 +608,7 @@ class _map_detail extends State<map_detail> {
                                           child: Image.asset(hospital_1 ? 'images/detail_btn_1.png': 'images/detail_btn_1_on.png'),
                                           onTap: () => {
                                             setState((){
+                                              hospital_subject = "내과";
                                               hospital = 1;
                                               hospital_1 = !hospital_1;
                                               hospital_2 == true ? (hospital_2 = !hospital_2) : '';
@@ -627,6 +630,7 @@ class _map_detail extends State<map_detail> {
                                           onTap: () => {
                                             setState((){
                                               hospital = 2;
+                                              hospital_subject = "산부인과";
                                               hospital_2 = !hospital_2;
                                               hospital_1 == false ? (hospital_1 = !hospital_1) : '';
                                               hospital_3 == true ? (hospital_3 = !hospital_3) : '';
@@ -647,6 +651,7 @@ class _map_detail extends State<map_detail> {
                                           onTap: () => {
                                             setState((){
                                               hospital = 3;
+                                              hospital_subject = "치과";
                                               hospital_3 = !hospital_3;
                                               hospital_1 == false ? (hospital_1 = !hospital_1) : '';
                                               hospital_2 == true ? (hospital_2 = !hospital_2) : '';
@@ -667,6 +672,7 @@ class _map_detail extends State<map_detail> {
                                           onTap: () => {
                                             setState((){
                                               hospital = 4;
+                                              hospital_subject = "정신과";
                                               hospital_4 = !hospital_4;
                                               hospital_1 == false ? (hospital_1 = !hospital_1) : '';
                                               hospital_2 == true ? (hospital_2 = !hospital_2) : '';
@@ -687,6 +693,7 @@ class _map_detail extends State<map_detail> {
                                           onTap: () => {
                                             setState((){
                                               hospital = 5;
+                                              hospital_subject = "피부과";
                                               hospital_5 = !hospital_5;
                                               hospital_1 == false ? (hospital_1 = !hospital_1) : '';
                                               hospital_2 == true ? (hospital_2 = !hospital_2) : '';
@@ -707,6 +714,7 @@ class _map_detail extends State<map_detail> {
                                           onTap: () => {
                                             setState((){
                                               hospital = 6;
+                                              hospital_subject = "안과";
                                               hospital_6 = !hospital_6;
                                               hospital_1 == false ? (hospital_1 = !hospital_1) : '';
                                               hospital_2 == true ? (hospital_2 = !hospital_2) : '';
@@ -727,6 +735,7 @@ class _map_detail extends State<map_detail> {
                                           onTap: () => {
                                             setState((){
                                               hospital = 7;
+                                              hospital_subject = "정형외과";
                                               hospital_7 = !hospital_7;
                                               hospital_1 == false ? (hospital_1 = !hospital_1) : '';
                                               hospital_2 == true ? (hospital_2 = !hospital_2) : '';
@@ -747,6 +756,7 @@ class _map_detail extends State<map_detail> {
                                           onTap: () => {
                                             setState((){
                                               hospital = 8;
+                                              hospital_subject = "이비인후과";
                                               hospital_8 = !hospital_8;
                                               hospital_1 == false ? (hospital_1 = !hospital_1) : '';
                                               hospital_2 == true ? (hospital_2 = !hospital_2) : '';
@@ -767,6 +777,7 @@ class _map_detail extends State<map_detail> {
                                           onTap: () => {
                                             setState((){
                                               hospital = 9;
+                                              hospital_subject = "기타";
                                               hospital_9 = !hospital_9;
                                               hospital_1 == false ? (hospital_1 = !hospital_1) : '';
                                               hospital_2 == true ? (hospital_2 = !hospital_2) : '';
@@ -834,8 +845,12 @@ class _map_detail extends State<map_detail> {
 
   Stream<List<ReviewModel>> streamReview(int hospital) {
     try{
-      final Stream<QuerySnapshot> snapshots = FirebaseFirestore.instance.collection('review')
-          .where("hospital_id", isEqualTo: hospital)
+      // print("id는 $hospital");
+      var db = FirebaseFirestore.instance;
+      db.settings = const Settings(persistenceEnabled: false);
+      final Stream<QuerySnapshot> snapshots = db.collection('review')
+          // .where("hospital_id", isEqualTo: hospital)
+          .where("hospital_subject", isEqualTo: hospital_subject)
           .where("shelter_name", isEqualTo: _mynamelist[0])
           .orderBy('timeStamp', descending: true).snapshots();
       return snapshots.map((querySnapshot){
@@ -847,7 +862,7 @@ class _map_detail extends State<map_detail> {
               )
           );
         });
-        print("id는 $hospital");
+        print("길이는 ${review.length}");
         return review; //QuerySnapshot에서 List<MessageModel> 로 변경이 됐으니 반환
       });
     } catch(ex){
