@@ -13,7 +13,7 @@ class map_screen extends StatelessWidget {
         height: ScreenUtil().setWidth(200),
         child: ElevatedButton(
           onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (_) => map_detail()));
+            Navigator.push(context, MaterialPageRoute(builder: (_) => map_detail(44)));
           },
           child: Text("지도 상세화면 보기"),
         ),

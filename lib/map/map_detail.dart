@@ -10,6 +10,10 @@ import 'package:url_launcher/url_launcher.dart';
 
 class map_detail extends StatefulWidget {
 
+  final int shelter_id;
+  const map_detail(this.shelter_id);
+
+
   @override
   _map_detail createState() => _map_detail();
 }
@@ -39,7 +43,7 @@ class _map_detail extends State<map_detail> {
   late List<int> _myidlist;
 
   Future<void> loadDetailData() async {
-    final datalist = await getmySQLDetailData(id);
+    final datalist = await getmySQLDetailData(widget.shelter_id);
     final mynamelist = datalist.map((data) => data.shelter_name).toList();
     final myemaillist = datalist.map((data) => data.shelter_email).toList();
     final myphnumlist = datalist.map((data) => data.shelter_phnum).toList();

@@ -161,6 +161,18 @@ flutter:
     - images/review_on_9.png
     - images/staron_btn.png
     - images/staroff_btn.png
+    - images/mypage_button_notification.png
+    - images/mypage_button_review.png
+    - images/mypage_button_shelter.png
+    - images/mylist_1.png
+    - images/mylist_2.png
+    - images/mylist_3.png
+    - images/mylist_4.png
+    - images/mylist_5.png
+    - images/mylist_6.png
+    - images/mylist_7.png
+    - images/mylist_8.png
+    - images/mylist_9.png
     - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see

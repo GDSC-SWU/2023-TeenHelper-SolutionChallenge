@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google/home/home_screen.dart';
 import 'package:google/map/map_screen.dart';
+import 'package:google/mypage/mypage_screen.dart';
 
 class navigationbar_screen extends StatefulWidget {
   const navigationbar_screen();
@@ -19,8 +20,9 @@ class _navigationbar_screen extends State<navigationbar_screen> {
     home_screen(),
     // map_detail(),
     map_screen(),
+    map_screen(),
     // chat_screen(),
-    // mypage_screen()
+    mypage_screen()
   ];
 
   void _onItemTapped(int index) {
