@@ -1,11 +1,11 @@
 import 'package:mysql1/mysql1.dart';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Mysql {
-  static String host = '34.64.143.145',
-      user = 'root',
-      password = 'root',
-      db = 'teenhelper1';
+  static String host = dotenv.get('HOST'),
+      user = dotenv.get('USER'),
+      password = dotenv.get('PASSWORD'),
+      db = dotenv.get('DB');
   static int port = 3306;
 
   Mysql();

@@ -1,22 +1,20 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:geolocator/geolocator.dart';
 //검색창 import
 import 'package:permission_handler/permission_handler.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'dart:convert';
 //데이터베이스 통신용 패키지
 import 'AddressModel.dart';
-
 //주소-> 위경도 값 변환 패키지
 import 'package:geocoding/geocoding.dart';
 //반응형 앱 코딩을 위해
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'mysql.dart';
 
 //<이 파일이 최종 파일임 여기에 각자 구현 기능들 추가>
 
@@ -29,14 +27,11 @@ class MapPractice extends StatefulWidget{
 
 class MapPracticeState extends State<MapPractice>{
   LatLng _center =const LatLng(37.382782, 127.1189054);
-  //데베 속 주소 가져오는 리스트로 사용예정
+  //데베 속 주소 가져오는 리스트로 사용예정(마커찍기용)
   List<String> _myDataList=[];
+  //db속 지역구 리스트로 가져온다
+  List<String> _suggestions=[];
   //태그 버튼 상태 변화용
-  bool _buttonPressed1=false;
-  bool _buttonPressed2=false;
-  bool _buttonPressed3=false;
-  bool _buttonPressed4=false;
-  bool _buttonPressed5=false;
   final Completer<GoogleMapController> _controller = Completer();
   final MapType _googleMapType = MapType.normal;
   final Set<Marker> _markers= {};
@@ -46,7 +41,15 @@ class MapPracticeState extends State<MapPractice>{
     target: LatLng(37.382782, 127.1189054),
     zoom:14,
   );
-
+  //검색창 입력 내용 controller
+  TextEditingController  _searchController = TextEditingController();
+  final _scrollController = ScrollController();
+  bool _isFocused = false;
+  final FocusNode _focusNode=FocusNode();
+  String searchingword='';
+  List<String> _locations = [];
+  List<String> _names = [];
+  int id=0;
 
   _onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
@@ -63,10 +66,10 @@ class MapPracticeState extends State<MapPractice>{
     for(String address in _myDataList){
      try{
        List<Location> locations = await locationFromAddress(address);
-       if(locations.length>0){
+       if(locations.isNotEmpty){
          LatLng latLng = LatLng(locations[0].latitude, locations[0].longitude);
          BitmapDescriptor bitmapDescriptor = await BitmapDescriptor.fromAssetImage(
-            ImageConfiguration(size: Size(25,32)), 'images/map_icon_mark.png');
+            const ImageConfiguration(size: Size(25,32)), 'images/map_icon_mark.png');
          Marker marker = Marker(
            markerId: MarkerId(address),
            position: latLng,
@@ -88,6 +91,49 @@ class MapPracticeState extends State<MapPractice>{
      }
     }
   }
+  //db에서 suggestion리스트(지역구)들 가져오기용
+  Future<void> loadpart() async{
+    var db = Mysql();
+    String sql = 'select distinct shelter_part from shelter;';
+    var conn = await db.getConnection();
+    final partlist = await conn.query(sql);
+    final parts = partlist.map((row) => row[0] as String).toList();
+    setState(() {
+      _suggestions = parts;
+    });
+  }//_suggestions에 지역구 데이터 저장 완료
+
+  Future<void> searchingname() async{//검색창에 입력한 값 db에서 검색
+    if(searchingword !=null && searchingword.isNotEmpty){
+      var db = Mysql();
+      String sql = "select shelter_name, shelter_location from shelter where shelter_location like '%${searchingword}%';";
+      var conn = await db.getConnection();
+      final results = await conn.query(sql);
+      final namelists = results.map((row) => row[0] as String).toList();
+      final loclists = results.map((row) => row[1] as String).toList();
+      setState(() {
+        _names = namelists;
+        _locations = loclists;
+      });
+
+    }
+
+  }
+
+  Future<void> searchingtag() async{//태그 정보를 db에서 조회 리스트 저장
+    if(id!=null){
+      var db = Mysql();
+      String sql = "select shelter_name, shelter_location from hospital where hospital_id=${id};";
+      var conn = await db.getConnection();
+      final results = await conn.query(sql);
+      final tagnames = results.map((row) => row[0] as String).toList();
+      final taglocs=results.map((row) => row[1] as String).toList();
+      setState(() {
+        _names = tagnames;
+        _locations = taglocs;
+      });
+    }
+  }
 
   //현재 위치 가져오기
   Future<void> _getCurrentLocation() async{
@@ -102,229 +148,285 @@ class MapPracticeState extends State<MapPractice>{
 
   }
 
-
   //지도 화면을 켰을때 초기화면
   @override
   void initState(){
     super.initState();
+    loadpart();
+    _focusNode.addListener(() {setState(() {
+      _isFocused = _focusNode.hasFocus;
+    });});
   }
-  
 
-//검색창 입력 내용 controller
-  TextEditingController searchTextEditingController = TextEditingController();
+  //구글맵 위젯---------------------
+  Widget googlemap(){
+    return GoogleMap(
+      mapType: _googleMapType,
+      initialCameraPosition: _initialCameraPosition,
+      onMapCreated: _onMapCreated,
+      myLocationEnabled: true,
+      //기본제공 내위치 버튼
+      myLocationButtonEnabled: false,
+      //확대축소 기본제공 버튼
+      zoomControlsEnabled: false,
+      zoomGesturesEnabled: true,
+      markers: _markers,
+    );
+  }
 
+  //검색창 위젯--------------
+  Widget searchingbar() {
+    return Container(
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: _isFocused ? null : () => _searchController.clear(),
+            child: Container(),
+          ),
 
-  @override
-  Widget build(BuildContext context) {
-    ScreenUtil.init(context);
-    return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          //검색창 입력시 혹은 미입력시 여부에 따른 화면 호출
-          //만약 입력시라면 검색창 만큼의 여백을 주고 화면 호출
-          displayNoSearchResultScreen(),
-          Padding( padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setSp(16),vertical: ScreenUtil().setSp(56)),
-            child: Align(alignment: Alignment.topCenter,
-              child: SizedBox(width: ScreenUtil().setWidth(328),height: ScreenUtil().setHeight(44),
-                child: TextFormField(
-                  controller: searchTextEditingController,
-                  //검색창 내부 디자인
-                  decoration: InputDecoration(
-                    prefixIcon: Image.asset("images/map_icon_address.png", width:ScreenUtil().setWidth(10), height:ScreenUtil().setHeight(10)),
-                    suffixIcon: IconButton(icon:Image.asset('images/map_icon_search.png',width:ScreenUtil().setWidth(18), height: ScreenUtil().setHeight(18)),
-                      //search버튼 누를때 행동은 데베 연동 후 구현
-                      onPressed: () {
-                        //검색후 나오는 bottom drawer 구현
-                      },),
-                    hintText: '쉼터 지역 또는 진료 분야 검색',
-                    hintStyle: TextStyle(color: HexColor('#BBBBBB'), fontSize: ScreenUtil().setSp(14)),
-                    contentPadding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height*0.013),
-
-                    //외곽 디자인 outline=모든면에 선이 존재
-                    enabledBorder: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      borderSide: BorderSide(color:Colors.white),
-                    ),
-                    //검색창 내부 색깔 집어넣기
-                    filled: true,
-                    fillColor: Colors.white,
+          SizedBox(//padding: EdgeInsets.fromLTRB(16,30,16,0),
+            width: ScreenUtil().setWidth(328),
+            child: TypeAheadField(
+              textFieldConfiguration: TextFieldConfiguration(
+                controller: _searchController,
+                focusNode: _focusNode,
+                decoration: InputDecoration(
+                  prefixIcon: _isFocused ? IconButton(
+                      onPressed: (){_searchController.clear();setState(() {
+                        searchingword="";
+                      });}, icon: Image.asset("images/back_Key.png", width: ScreenUtil().setWidth(24.0), height: ScreenUtil().setHeight(24.0)))
+                      :IconButton(onPressed: (){}, icon: Image.asset("images/map_icon_address.png", width: ScreenUtil().setWidth(16.0), height: ScreenUtil().setHeight(16.0))),
+                  hintText: '쉼터 지역 또는 진료 분야 검색',
+                  hintStyle: TextStyle(color: HexColor('#BBBBBB'), fontSize: ScreenUtil().setSp(14)),
+                  contentPadding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height*0.013),
+                  suffixIcon: IconButton(onPressed: () {
+                    setState(() {
+                      _names.clear();
+                      _locations.clear();
+                      searchingword= _searchController.text;
+                    });
+                    searchingname();
+                  }, icon:Image.asset('images/map_icon_search.png',width:ScreenUtil().setWidth(18), height: ScreenUtil().setHeight(18)),
                   ),
+                  //외곽 디자인 outline=모든면에 선이 존재
+                  enabledBorder:  OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    borderSide: BorderSide(color:Colors.white),
+
+                  ),
+
+                  focusedBorder: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    borderSide: BorderSide(color:Colors.white),
+                  ),
+                  //검색창 내부 색깔 집어넣기
+                  filled: true,
+                  fillColor: Colors.white,
                 ),
+
+              ),
+              suggestionsCallback: (pattern) async {
+                return _getSuggestions(pattern);
+              },
+              itemBuilder: (context, suggestion) {
+                return ListTile(
+                  leading: Image.asset('images/map_search_local.png',width: ScreenUtil().setWidth(16.0),height: ScreenUtil().setHeight(16.0)),
+                  title: Text(suggestion, 
+                  style: TextStyle(color: HexColor('#353535'),fontSize: ScreenUtil().setSp(14.0)),),
+                );
+              },
+
+              onSuggestionSelected: (suggestion) {
+                setState(() {
+                  _names.clear();
+                  _locations.clear();
+                  _searchController.text = suggestion;
+                  searchingword= _searchController.text;
+                });
+                searchingname();
+              },
+              suggestionsBoxDecoration:  SuggestionsBoxDecoration(
+                color:HexColor('#E9E9E9'),
+                /*constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height,
+                  maxWidth: MediaQuery.of(context).size.width,
+                )*/
               ),
             ),
           ),
 
         ],
-      )
+      ),
+
     );
 
   }
+  Future<List<String>> _getSuggestions(String query) async{
+    List<String> matches = [];
+    for(var suggestion in _suggestions){
+      if(suggestion.contains(query)){
+        matches.add(suggestion);
+      }
+    }
+    return matches;
+  }
 
-  //검색창 밑에 놓일 지도, 등등 widget들
-  displayNoSearchResultScreen(){
+
+
+  /*@override
+  void dispose(){
+    _scrollController.dispose();
+    super.dispose();
+  }*/
+  List<bool> _isSelected = List.generate(9,(index) => false);
+  List<String> buttonlist = ['전체', '내과 연계', '산부인과 연계','치과 연계', '정신과 연계', '피부과 연계', '안과 연계', '이비인후과 연계', '기타 연계' ];
+  List<Widget> _buildButtons(){
+    return List.generate(9, (index) {
+      return ElevatedButton(onPressed: (){
+        setState(() {
+          for(int i=0; i<_isSelected.length; i++){
+            _isSelected[i] = (i == index);
+          }
+          _names.clear();
+          _locations.clear();
+          id=index;
+        });
+        searchingtag();
+      },
+        style: ElevatedButton.styleFrom(
+            primary: _isSelected[index] ? HexColor('#E76D3B') : Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(26.0),
+            )
+        ),
+        child: Text("${buttonlist[index]}", style: TextStyle(
+          color: _isSelected[index] ? Colors.white : Colors.black,
+          fontSize: ScreenUtil().setSp(12),
+        ),),
+      );
+    });
+  }
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    ScreenUtil.init(context);
     return Scaffold(
-      body:Stack(
-        children: <Widget> [
-          GoogleMap(
-            mapType: _googleMapType,
-            initialCameraPosition: _initialCameraPosition,
-            onMapCreated: _onMapCreated,
-            myLocationEnabled: true,
-            //기본제공 내위치 버튼
-            myLocationButtonEnabled: false,
-            //확대축소 기본제공 버튼
-            zoomControlsEnabled: false,
-            zoomGesturesEnabled: true,
-            markers: _markers,
+      body: Stack(
+        children: [
+          //밑에 깔리는 지도화면
+          googlemap(),
+          //검색창 기능들 구현
+          Positioned(top: ScreenUtil().setHeight(56.0), left: ScreenUtil().setWidth(16.0),
+                child: searchingbar()),
+
+          //태그 버튼들
+         Positioned(top: ScreenUtil().setHeight(116.0), left: ScreenUtil().setWidth(32.0),
+           child: SingleChildScrollView( scrollDirection: Axis.horizontal,
+             child: Row(
+               children: _buildButtons(),
+             ),
+           ),
           ),
-          //현재 위치 가져올수 있는 버튼
-          Container(
+
+
+          Container(//내위치 가져오는 floating button
             child: Positioned(bottom:ScreenUtil().setHeight(88), right:ScreenUtil().setHeight(16),//네비게이션바 크기만큼 bottom으로 지정할것
-                child: FloatingActionButton(
-                  child: Image.asset(
-                    'images/location_current_icon.png',
-                    width: ScreenUtil().setWidth(24),
-                    height: ScreenUtil().setHeight(24),
+                  child: FloatingActionButton(
+                    backgroundColor: Colors.white,
+                    onPressed: _getCurrentLocation,
+                    child: Image.asset(
+                      'images/location_current_icon.png',
+                      width: ScreenUtil().setWidth(24),
+                      height: ScreenUtil().setHeight(24),
+                    ),
+                  ),
                 ),
-                  backgroundColor: Colors.white,
-                  onPressed: _getCurrentLocation,
-
-                )),
           ),
-          //검색창 밑 태그 버튼
-              Container(
-                        child: Padding( padding: EdgeInsets.only(top:ScreenUtil().setSp(110) , left: ScreenUtil().setSp(32)),//반응형으로 다시 수정padding: EdgeInsets.only(left:ScreenUtil().setSp(4.0)
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child:Row(
-                              children: [
-                                  ElevatedButton(
-                                      onPressed: (){
-                                        setState(() {
-                                          _buttonPressed1 = !_buttonPressed1;
-                                          //밑에 데이터 받아와서 뜨도록 함수 호출
-                                        });
-                                      },
 
-                                      child: Text('전체',
-                                        style:TextStyle(color:_buttonPressed1 ? Colors.white : Colors.black, fontSize: ScreenUtil().setSp(12)),
-                                      ),
-                                    style: ButtonStyle(
-                                      backgroundColor: _buttonPressed1 ? MaterialStateProperty.all<Color>(HexColor('#E76D3B')) : MaterialStateProperty.all<Color>(Colors.white),
-                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(26.0),
-                                        )
-                                      )
-                                    ),
+          //drawer
 
-                                    ),
-                                     Padding( padding: EdgeInsets.only(left:ScreenUtil().setSp(4.0)),
-                                       child: ElevatedButton(
-                                        onPressed: (){
-                                          setState(() {
-                                            _buttonPressed2 = !_buttonPressed2;
-                                            //밑에 데이터 받아와서 뜨도록 함수 호출
-                                          });
-                                        },
-
-                                        child: Text('내과 연계',
-                                          style:TextStyle(color:_buttonPressed2 ? Colors.white : Colors.black, fontSize: ScreenUtil().setSp(12)),
-                                        ),
-                                        style: ButtonStyle(
-                                            backgroundColor: _buttonPressed2 ? MaterialStateProperty.all<Color>(HexColor('#E76D3B')) : MaterialStateProperty.all<Color>(Colors.white),
-                                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(26.0),
-                                                )
+          Visibility(visible: (searchingword.isNotEmpty && _suggestions != null) || (id!=0),
+            child: DraggableScrollableSheet(
+                initialChildSize: 0.39,
+                minChildSize: 0.39,
+                maxChildSize: 0.8,
+                builder:(BuildContext context, ScrollController myScrollController){
+                  return ClipRRect(
+                    borderRadius: const BorderRadius.vertical(top:Radius.circular(20.0)),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                      ),
+                      child: ListView.builder(
+                          controller: myScrollController,
+                          itemCount: _names.length,
+                          itemBuilder: (BuildContext context , int index){
+                            //스크랩 애니메이션 작동안됨
+                            List<bool> _isScrap = List.generate(_names.length, (index) => true);
+                            void _scrapFunction(int index){
+                              setState(() {
+                                _isScrap[index]= !_isScrap[index];
+                              });
+                            }
+                            return ListTile(
+                                title:Text(_names[index],textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: ScreenUtil().setSp(16.0),
+                                ),),
+                                subtitle: Padding(
+                                  padding: const EdgeInsets.only(top:4.0),
+                                  child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                    children:[
+                                      Text(_locations[index],textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontSize: ScreenUtil().setSp(12.0)
+                                      ),),
+                                      Row(
+                                          children:[
+                                            ToggleButtons(children: [
+                                              Text("내과 연계 19"),
+                                              Text("산부인과 연계 6"),
+                                              Text("치과 연계 8"),
+                                            ],
+                                              isSelected: [false, false, false],
                                             )
-                                        ),
-
-                                    ),
-                                     ),
-                                SizedBox( width: ScreenUtil().setWidth(4.0)),
-                                ElevatedButton(
-                                  onPressed: (){
-                                    setState(() {
-                                      _buttonPressed3 = !_buttonPressed3;
-                                      //밑에 데이터 받아와서 뜨도록 함수 호출
-                                    });
-                                  },
-
-                                  child: Text('산부인과 연계',
-                                    style:TextStyle(color:_buttonPressed3 ? Colors.white : Colors.black, fontSize: ScreenUtil().setSp(12)),
+                                          ]),
+                                    ],
                                   ),
-                                  style: ButtonStyle(
-                                      backgroundColor: _buttonPressed3 ? MaterialStateProperty.all<Color>(HexColor('#E76D3B')) : MaterialStateProperty.all<Color>(Colors.white),
-                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(26.0),
-                                          )
-                                      )
-                                  ),
-
-                                ),
-                                SizedBox( width: ScreenUtil().setWidth(4.0)),
-                                ElevatedButton(
-                                  onPressed: (){
-                                    setState(() {
-                                      _buttonPressed4 = !_buttonPressed4;
-                                      //밑에 데이터 받아와서 뜨도록 함수 호출
-                                    });
-
-                                  },
-
-                                  child: Text('치과 연계',
-                                    style:TextStyle(color:_buttonPressed4 ? Colors.white : Colors.black, fontSize: ScreenUtil().setSp(12)),
-                                  ),
-                                  style: ButtonStyle(
-                                      backgroundColor: _buttonPressed4 ? MaterialStateProperty.all<Color>(HexColor('#E76D3B')) : MaterialStateProperty.all<Color>(Colors.white),
-                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(26.0),
-                                          )
-                                      )
-                                  ),
-
-                                ),
-                                SizedBox( width: ScreenUtil().setWidth(4.0)),
-                                ElevatedButton(
-                                  onPressed: (){
-                                    setState(() {
-                                      _buttonPressed5 = !_buttonPressed5;
-                                      //밑에 데이터 받아와서 뜨도록 함수 호출
-                                    });
-
-                                  },
-
-                                  child: Text('정신과 연계',
-                                    style:TextStyle(color:_buttonPressed5 ? Colors.white : Colors.black, fontSize: ScreenUtil().setSp(12)),
-                                  ),
-                                  style: ButtonStyle(
-                                      backgroundColor: _buttonPressed5 ? MaterialStateProperty.all<Color>(HexColor('#E76D3B')) : MaterialStateProperty.all<Color>(Colors.white),
-                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(26.0),
-                                          )
-                                      )
-                                  ),
-
                                 ),
 
+                              trailing: IconButton(
+                                icon: _isScrap[index] ? Image.asset('images/scrap.png',
+                                    width:ScreenUtil().setWidth(24),
+                                    height: ScreenUtil().setHeight(24)) : Image.asset('images/map_list_icon_star_fill.png',
+                                    width:ScreenUtil().setWidth(24),
+                                    height: ScreenUtil().setHeight(24)),
+                              onPressed: (){
+                                //스크랩 기능 구현
+                                _scrapFunction(index);
+                              },),
+                              onTap: (){
+                                  //상세페이지로 넘어가도록 명시
+                              },
+                            );
+                          },),
+                    ),
+                  );
+                },),
 
-                              ],
-                            )
-                          ),
-                        ),
-
-
-              ),
-
-
+          ),
         ],
       )
     );
+
   }
+
+
+
 
   //위치 권한 접근 조정하는 기능
   void _permission() async{

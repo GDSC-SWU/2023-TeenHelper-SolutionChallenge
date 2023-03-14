@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  flutter_dotenv: ^5.0.2
   flutter_typeahead: ^4.3.7
   autocomplete_textfield: ^2.0.1
   geocoding: ^2.0.5
@@ -87,6 +88,11 @@ flutter:
     - images/marker.png
     - images/location_current_icon.png
     - images/map_icon_mark.png
+    - images/map_search_local.png
+    - images/scrap.png
+    - .env
+    - images/map_list_icon_star_fill.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
