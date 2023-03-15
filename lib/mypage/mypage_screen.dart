@@ -7,6 +7,7 @@ import 'package:google/Login/main_screen.dart';
 import 'package:google/mypage/information_screen.dart';
 import 'package:google/mypage/nick_model.dart';
 import 'package:google/mypage/review_list_screen.dart';
+import 'package:google/mypage/scrap_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class mypage_screen extends StatefulWidget {
@@ -143,7 +144,8 @@ class _mypage_screen extends State<mypage_screen> {
                           child: InkWell(
                             child: Image.asset('images/mypage_button_shelter.png'),
                             onTap: () => {
-
+                              Navigator.push(
+                                  context, MaterialPageRoute(builder: (_) => scrap_screen()))
                             },
                           ),
                         ),

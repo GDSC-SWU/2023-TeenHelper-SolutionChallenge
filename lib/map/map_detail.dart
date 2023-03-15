@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google/Login/loading.dart';
@@ -7,6 +8,8 @@ import 'package:google/map/detail_model.dart';
 import 'package:google/map/review_model.dart';
 import 'package:google/map/review_write_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../google_map/scrap_model.dart';
 
 class map_detail extends StatefulWidget {
 
@@ -66,6 +69,23 @@ class _map_detail extends State<map_detail> {
     });
   }
 
+  Future<void> scrapEdit(bool scrap, int shelter_id) async {
+    await FirebaseFirestore.instance.collection("scrap").doc(FirebaseAuth.instance.currentUser!.uid + shelter_id.toString()).update(
+        {
+          "scrap": scrap,
+        });
+  }
+
+  Future<void> scrapWrite(bool scrap, String shelter_name, int shelter_id, String shelter_location) async {
+    await FirebaseFirestore.instance.collection("scrap").doc(FirebaseAuth.instance.currentUser!.uid + shelter_id.toString()).set({
+      "uid": FirebaseAuth.instance.currentUser!.uid,
+      "shelter_id" : shelter_id,
+      "shelter_name" : shelter_name,
+      "scrap": scrap,
+      "shelter_location" : shelter_location,
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -85,12 +105,31 @@ class _map_detail extends State<map_detail> {
               },
             ),
             actions: [
-              InkWell(
-                child: Image.asset('images/staroff_btn.png'),
-                onTap: () => {
-
-                },
-              ),],
+              StreamBuilder<List<ScrapModel>>(
+                stream: streamScrap(),
+                builder: (context, asyncSnapshot) {
+                  if(asyncSnapshot.hasData && asyncSnapshot.data!.isNotEmpty) {
+                    List<ScrapModel> scrap = asyncSnapshot.data!;
+                    return InkWell(
+                        child: Image.asset(scrap[0].scrap == true ? 'images/staron_btn.png' : 'images/staroff_btn.png'),
+                        onTap: () => {
+                          scrapEdit(!scrap[0].scrap, _myidlist[0])
+                        }
+                    );
+                  } else if (asyncSnapshot.hasError) {
+                    return const Center(
+                      child: Text('오류가 발생했습니다.'),);
+                  } else {
+                    return InkWell(
+                      child: Image.asset('images/staroff_btn.png'),
+                      onTap: () => {
+                        scrapWrite(true, _mynamelist[0], _myidlist[0], _mylocationlist[0]),
+                      },
+                    );
+                  }
+                }
+              ),
+            ],
             title: Text(_mynamelist[0],
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -844,6 +883,32 @@ class _map_detail extends State<map_detail> {
             ),
           )
       );
+    }
+  }
+
+  Stream<List<ScrapModel>> streamScrap() {
+    try{
+      // print("id는 $hospital");
+      var db = FirebaseFirestore.instance;
+      db.settings = const Settings(persistenceEnabled: false);
+      final Stream<QuerySnapshot> snapshots = db.collection('scrap')
+          .where("uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid.toString())
+          .where("shelter_name", isEqualTo: _mynamelist[0]).snapshots();
+      return snapshots.map((querySnapshot){
+        List<ScrapModel> scrap = [];//querySnapshot을 message로 옮기기 위해 List<MessageModel> 선언
+        querySnapshot.docs.forEach((element) { //해당 컬렉션에 존재하는 모든 docs를 순회하며 messages 에 데이터를 추가한다.
+          scrap.add(
+              ScrapModel.fromMap(
+                  map:element.data() as Map<String, dynamic>
+              )
+          );
+        });
+        print("scrap 길이는 ${scrap.length}");
+        return scrap; //QuerySnapshot에서 List<MessageModel> 로 변경이 됐으니 반환
+      });
+    } catch(ex){
+      log('error)',error: ex.toString(),stackTrace: StackTrace.current);
+      return Stream.error(ex.toString());
     }
   }
 
