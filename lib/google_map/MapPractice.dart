@@ -1,7 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:google/google_map/scrap_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:geolocator/geolocator.dart';
@@ -49,6 +53,7 @@ class MapPracticeState extends State<MapPractice>{
   String searchingword='';
   List<String> _locations = [];
   List<String> _names = [];
+  List<int> _shelterId = [];
   int id=0;
 
   _onMapCreated(GoogleMapController controller) {
@@ -106,14 +111,16 @@ class MapPracticeState extends State<MapPractice>{
   Future<void> searchingname() async{//검색창에 입력한 값 db에서 검색
     if(searchingword !=null && searchingword.isNotEmpty){
       var db = Mysql();
-      String sql = "select shelter_name, shelter_location from shelter where shelter_location like '%${searchingword}%';";
+      String sql = "select shelter_name, shelter_location, shelter_id from shelter where shelter_location like '%${searchingword}%';";
       var conn = await db.getConnection();
       final results = await conn.query(sql);
       final namelists = results.map((row) => row[0] as String).toList();
       final loclists = results.map((row) => row[1] as String).toList();
+      final idlists = results.map((row) => row[2] as int).toList();
       setState(() {
         _names = namelists;
         _locations = loclists;
+        _shelterId = idlists;
       });
 
     }
@@ -123,14 +130,16 @@ class MapPracticeState extends State<MapPractice>{
   Future<void> searchingtag() async{//태그 정보를 db에서 조회 리스트 저장
     if(id!=null){
       var db = Mysql();
-      String sql = "select shelter_name, shelter_location from hospital where hospital_id=${id};";
+      String sql = "select shelter_name, shelter_location, shelter_id from hospital where hospital_id=${id};";
       var conn = await db.getConnection();
       final results = await conn.query(sql);
       final tagnames = results.map((row) => row[0] as String).toList();
       final taglocs=results.map((row) => row[1] as String).toList();
+      final tagid = results.map((row) => row[2] as int).toList();
       setState(() {
         _names = tagnames;
         _locations = taglocs;
+        _shelterId = tagid;
       });
     }
   }
@@ -138,6 +147,7 @@ class MapPracticeState extends State<MapPractice>{
   //현재 위치 가져오기
   Future<void> _getCurrentLocation() async{
     final GoogleMapController mapController = await _controller.future;
+    LocationPermission permission = await Geolocator.requestPermission(); // 위치 액세스 허용
     final Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high);
     setState(() {
@@ -203,6 +213,7 @@ class MapPracticeState extends State<MapPractice>{
                     setState(() {
                       _names.clear();
                       _locations.clear();
+                      _shelterId.clear();
                       searchingword= _searchController.text;
                     });
                     searchingname();
@@ -240,6 +251,7 @@ class MapPracticeState extends State<MapPractice>{
                 setState(() {
                   _names.clear();
                   _locations.clear();
+                  _shelterId.clear();
                   _searchController.text = suggestion;
                   searchingword= _searchController.text;
                 });
@@ -271,6 +283,51 @@ class MapPracticeState extends State<MapPractice>{
     return matches;
   }
 
+  // 파이어베이스 스크랩
+
+  Stream<List<ScrapModel>> streamScrap(String shelter_name) {
+    try{
+      // print("id는 $hospital");
+      var db = FirebaseFirestore.instance;
+      db.settings = const Settings(persistenceEnabled: false);
+      final Stream<QuerySnapshot> snapshots = db.collection('scrap')
+          .where("uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid.toString())
+          .where("shelter_name", isEqualTo: shelter_name).snapshots();
+      return snapshots.map((querySnapshot){
+        List<ScrapModel> scrap = [];//querySnapshot을 message로 옮기기 위해 List<MessageModel> 선언
+        querySnapshot.docs.forEach((element) { //해당 컬렉션에 존재하는 모든 docs를 순회하며 messages 에 데이터를 추가한다.
+          scrap.add(
+              ScrapModel.fromMap(
+                  map:element.data() as Map<String, dynamic>
+              )
+          );
+        });
+        print("scrap 길이는 ${scrap.length}");
+        return scrap; //QuerySnapshot에서 List<MessageModel> 로 변경이 됐으니 반환
+      });
+    } catch(ex){
+      log('error)',error: ex.toString(),stackTrace: StackTrace.current);
+      return Stream.error(ex.toString());
+    }
+  }
+
+  Future<void> scrapEdit(bool scrap, int shelter_id) async {
+    await FirebaseFirestore.instance.collection("scrap").doc(FirebaseAuth.instance.currentUser!.uid + shelter_id.toString()).update(
+        {
+          "scrap": scrap,
+        });
+  }
+
+  Future<void> scrapWrite(bool scrap, String shelter_name, int shelter_id, String shelter_location) async {
+    await FirebaseFirestore.instance.collection("scrap").doc(FirebaseAuth.instance.currentUser!.uid + shelter_id.toString()).set({
+      "uid": FirebaseAuth.instance.currentUser!.uid,
+      "shelter_id" : shelter_id,
+      "shelter_name" : shelter_name,
+      "scrap": scrap,
+      "shelter_location" : shelter_location,
+    });
+  }
+
 
 
   /*@override
@@ -289,6 +346,7 @@ class MapPracticeState extends State<MapPractice>{
           }
           _names.clear();
           _locations.clear();
+          _shelterId.clear();
           id=index;
         });
         searchingtag();
@@ -365,13 +423,6 @@ class MapPracticeState extends State<MapPractice>{
                           controller: myScrollController,
                           itemCount: _names.length,
                           itemBuilder: (BuildContext context , int index){
-                            //스크랩 애니메이션 작동안됨
-                            List<bool> _isScrap = List.generate(_names.length, (index) => true);
-                            void _scrapFunction(int index){
-                              setState(() {
-                                _isScrap[index]= !_isScrap[index];
-                              });
-                            }
                             return ListTile(
                                 title:Text(_names[index],textAlign: TextAlign.left,
                                 style: TextStyle(
@@ -398,17 +449,30 @@ class MapPracticeState extends State<MapPractice>{
                                     ],
                                   ),
                                 ),
-
-                              trailing: IconButton(
-                                icon: _isScrap[index] ? Image.asset('images/scrap.png',
-                                    width:ScreenUtil().setWidth(24),
-                                    height: ScreenUtil().setHeight(24)) : Image.asset('images/map_list_icon_star_fill.png',
-                                    width:ScreenUtil().setWidth(24),
-                                    height: ScreenUtil().setHeight(24)),
-                              onPressed: (){
-                                //스크랩 기능 구현
-                                _scrapFunction(index);
-                              },),
+                              trailing:  StreamBuilder<List<ScrapModel>>(
+                                  stream: streamScrap(_names[index]),
+                                  builder: (context, asyncSnapshot) {
+                                    if(asyncSnapshot.hasData && asyncSnapshot.data!.isNotEmpty) {
+                                      List<ScrapModel> scrap = asyncSnapshot.data!;
+                                      return InkWell(
+                                          child: Image.asset(scrap[0].scrap == true ? 'images/staron_btn.png' : 'images/staroff_btn.png'),
+                                          onTap: () => {
+                                            scrapEdit(!scrap[0].scrap, _shelterId[index])
+                                          }
+                                      );
+                                    } else if (asyncSnapshot.hasError) {
+                                      return const Center(
+                                        child: Text('오류가 발생했습니다.'),);
+                                    } else {
+                                      return InkWell(
+                                        child: Image.asset('images/staroff_btn.png'),
+                                        onTap: () => {
+                                          scrapWrite(true, _names[index], _shelterId[index], _locations[index]),
+                                        },
+                                      );
+                                    }
+                                  }
+                              ),
                               onTap: (){
                                   //상세페이지로 넘어가도록 명시
                               },
