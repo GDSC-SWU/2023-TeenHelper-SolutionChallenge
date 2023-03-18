@@ -5,7 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class Mysql {
   static String host = '34.64.143.145',
       user = 'root',
-      password = dotenv.env['pwd']!, // 'Pink0914!!',
+      password = dotenv.env['PASSWORD']!, // 'Pink0914!!',
       db = 'teenhelper1';
   static int port = 3306;
 

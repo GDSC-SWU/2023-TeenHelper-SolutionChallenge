@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google/map/detail_model.dart';
 import 'package:intl/intl.dart';
 
 class review_write_screen extends StatefulWidget {
@@ -53,6 +54,16 @@ class _review_write_screen extends State<review_write_screen> {
     // Navigator.push(context, MaterialPageRoute(builder: (_) => map_detail()));
     Navigator.pop(context);
   }
+
+  Future<void> mysqlReview(String shelter_name, int hospital_id) async{
+      var db = Mysql();
+      var conn = await db.getConnection();
+      String sql = " update hospital set review_cnt = review_cnt+1 where shelter_name='${shelter_name}' and hospital_id = ${hospital_id};";
+      final results = await conn.query(sql);
+      results;
+  }
+
+
 
   String hospital = "";
   int hospitalId = 0;
@@ -370,9 +381,9 @@ class _review_write_screen extends State<review_write_screen> {
                       child: InkWell(
                         child: Image.asset('images/review_button.png'),
                         onTap: () => {
-                          hospital.length > 0 && hospitalId > 0 ? "" : showToast("어떤 의료적 도움을 받았는지 선택해주세요."),
+                          hospital.length > 0 && hospitalId > 0 ? mysqlReview(widget.name, hospitalId) : showToast("어떤 의료적 도움을 받았는지 선택해주세요."),
                           _reviewTextEditController.text.length > 0 ? "" : showToast("후기를 작성해주세요."),
-                          hospital.length > 0 && _reviewTextEditController.text.length > 0 ? reviewWrite(_reviewTextEditController.text, hospital, hospitalId) : ""
+                          hospital.length > 0 && _reviewTextEditController.text.length > 0 ? reviewWrite(_reviewTextEditController.text, hospital, hospitalId): ""
                         },
                       )
                   ),
