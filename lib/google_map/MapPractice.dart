@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -26,6 +27,7 @@ class MapPractice extends StatefulWidget{
 }
 
 class MapPracticeState extends State<MapPractice>{
+  BitmapDescriptor markerIcon = BitmapDescriptor.defaultMarker;
   LatLng _center =const LatLng(37.382782, 127.1189054);
   //데베 속 주소 가져오는 리스트로 사용예정(마커찍기용)
   List<String> _myDataList=[];
@@ -50,10 +52,63 @@ class MapPracticeState extends State<MapPractice>{
   List<String> _locations = [];
   List<String> _names = [];
   int id=0;
+  List<String> _searchHistory=[];
+
+  //추가--------------------------------------------------
+  List<String> review_num=[];
+  List<String> review_hospital=[];
+
+  //위치 권한 접근 조정하는 기능
+  void _permission() async{
+    var requestStatus = await Permission.location.request();
+    var status = await Permission.location.status;
+    if(requestStatus.isGranted && status.isLimited){
+      //제한적 동의를 한경우 중 요청에 동의하였을때
+      print("isGranted");
+      if(await Permission.locationWhenInUse.serviceStatus.isEnabled){
+        //요청동의 + gps켜짐
+        _getCurrentLocation;
+      }else{
+        //요청 동의 + gps 꺼짐
+        print("serviceStatus IsDisabled");
+      }
+    }
+    else if(requestStatus.isPermanentlyDenied || status.isPermanentlyDenied){
+      //권한 요청 거부, 설정화면에서 변경해야할 경우, 다시묻지 않음 선택
+      print("isPermanentlyDenied");
+      openAppSettings();
+    }else if(status.isRestricted){
+      //권한 요청 거부, 해당 권한에 대해 요청을 표시하지 않도록 선택해 설정 화면에서 변경해야함
+      print("isRestricted");
+      openAppSettings();
+    }else if(status.isDenied){
+      //권한 요청 거절
+      print("isDenied");
+    }
+
+  }
+
 
   _onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
     loadandaddMarkers();
+  }
+
+  Future<BitmapDescriptor> _loadCustomMarkerImage() async{
+    final ImageConfiguration config = ImageConfiguration(size:Size(ScreenUtil().setWidth(32.0),ScreenUtil().setHeight(32.0)));
+    final bitmap = await BitmapDescriptor.fromAssetImage(config, 'images/map_icon_mark.png');
+    return bitmap;
+  }
+
+  void addCustomIcon(){
+    BitmapDescriptor.fromAssetImage(const ImageConfiguration(), "images/map_icon_mark.png")
+        .then(
+            (icon){
+          setState(() {
+            markerIcon = icon;
+          });
+        }
+    );
   }
 
   //db에서 데이터 불러와 마커 찍는 기능
@@ -64,31 +119,29 @@ class MapPracticeState extends State<MapPractice>{
       _myDataList = mydatalist;
     });
     for(String address in _myDataList){
-     try{
-       List<Location> locations = await locationFromAddress(address);
-       if(locations.isNotEmpty){
-         LatLng latLng = LatLng(locations[0].latitude, locations[0].longitude);
-         BitmapDescriptor bitmapDescriptor = await BitmapDescriptor.fromAssetImage(
-            const ImageConfiguration(size: Size(25,32)), 'images/map_icon_mark.png');
-         Marker marker = Marker(
-           markerId: MarkerId(address),
-           position: latLng,
-           //icon: bitmapDescriptor,
-           infoWindow: InfoWindow(
-             title: address,
-           ),
-         );
-         setState(() {
-           _markers.add(marker);
-         });
-       }
-     } on TimeoutException catch (e){
-       print('Timeoutexception:$e');
-     }on SocketException catch (e){
-       print('socketexception:$e');
-     }catch(e){
-       print(e);
-     }
+      try{
+        List<Location> locations = await locationFromAddress(address);
+        if(locations.isNotEmpty){
+          LatLng latLng = LatLng(locations[0].latitude, locations[0].longitude);
+          Marker marker = Marker(
+            markerId: MarkerId(address),
+            position: latLng,
+            icon:markerIcon,
+            infoWindow: InfoWindow(
+              title: address,
+            ),
+          );
+          setState(() {
+            _markers.add(marker);
+          });
+        }
+      } on TimeoutException catch (e){
+        print('Timeoutexception:$e');
+      }on SocketException catch (e){
+        print('socketexception:$e');
+      }catch(e){
+        print(e);
+      }
     }
   }
   //db에서 suggestion리스트(지역구)들 가져오기용
@@ -134,16 +187,34 @@ class MapPracticeState extends State<MapPractice>{
       });
     }
   }
+  Future<void> Showreview() async{
+    if(_names.isNotEmpty && _names != null){
+      var db = Mysql();
+      var conn = await db.getConnection();
+      for(int i=0; i<_names.length; i++){
+        String sql = "select hospital_subject, shelter_name, review_cnt from hospital where shelter_name='${_names[i]}';";
+        final results = await conn.query(sql);
+        final numbersList = results.map((row) => row[2].toString() as String).toList();
+        final hospitalsList = results.map((row) => row[0].toString() as String).toList();
+        review_num.addAll(numbersList);
+        review_hospital.addAll(hospitalsList);
+      }
+      setState(() {
+        this.review_num = review_num;
+        this.review_hospital = review_hospital;
+      });
+    }
+  }
 
   //현재 위치 가져오기
   Future<void> _getCurrentLocation() async{
     final GoogleMapController mapController = await _controller.future;
     final Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high);
+        desiredAccuracy: LocationAccuracy.high);
     setState(() {
       _center = LatLng(position.latitude, position.longitude);
       mapController.animateCamera(
-          CameraUpdate.newCameraPosition(CameraPosition(target: _center, zoom:15.0,),),);
+        CameraUpdate.newCameraPosition(CameraPosition(target: _center, zoom:15.0,),),);
     });
 
   }
@@ -151,11 +222,14 @@ class MapPracticeState extends State<MapPractice>{
   //지도 화면을 켰을때 초기화면
   @override
   void initState(){
+    addCustomIcon();
     super.initState();
     loadpart();
     _focusNode.addListener(() {setState(() {
       _isFocused = _focusNode.hasFocus;
     });});
+    //수상하면 지우기
+    reviewButtons = _buildreview();
   }
 
   //구글맵 위젯---------------------
@@ -172,7 +246,10 @@ class MapPracticeState extends State<MapPractice>{
       zoomGesturesEnabled: true,
       markers: _markers,
     );
+
+
   }
+
 
   //검색창 위젯--------------
   Widget searchingbar() {
@@ -184,7 +261,17 @@ class MapPracticeState extends State<MapPractice>{
             child: Container(),
           ),
 
-          SizedBox(//padding: EdgeInsets.fromLTRB(16,30,16,0),
+          Container(decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: HexColor('#0000000D'),
+                  blurRadius: 4,
+                  spreadRadius: 2,
+                  offset: Offset(0,0),
+                )
+              ]
+
+          ),
             width: ScreenUtil().setWidth(328),
             child: TypeAheadField(
               textFieldConfiguration: TextFieldConfiguration(
@@ -192,9 +279,11 @@ class MapPracticeState extends State<MapPractice>{
                 focusNode: _focusNode,
                 decoration: InputDecoration(
                   prefixIcon: _isFocused ? IconButton(
-                      onPressed: (){_searchController.clear();setState(() {
-                        searchingword="";
-                      });}, icon: Image.asset("images/back_Key.png", width: ScreenUtil().setWidth(24.0), height: ScreenUtil().setHeight(24.0)))
+                      onPressed: (){//_searchController.clear();
+                        setState(() {
+                          _searchController.clear();
+                          searchingword="";
+                        });}, icon: Image.asset("images/back_Key.png", width: ScreenUtil().setWidth(24.0), height: ScreenUtil().setHeight(24.0)))
                       :IconButton(onPressed: (){}, icon: Image.asset("images/map_icon_address.png", width: ScreenUtil().setWidth(16.0), height: ScreenUtil().setHeight(16.0))),
                   hintText: '쉼터 지역 또는 진료 분야 검색',
                   hintStyle: TextStyle(color: HexColor('#BBBBBB'), fontSize: ScreenUtil().setSp(14)),
@@ -204,6 +293,10 @@ class MapPracticeState extends State<MapPractice>{
                       _names.clear();
                       _locations.clear();
                       searchingword= _searchController.text;
+                      //최근 검색어 리스트에 저장하기 위함
+                      if(!_searchHistory.contains(searchingword)){
+                        _searchHistory.add(searchingword);
+                      }
                     });
                     searchingname();
                   }, icon:Image.asset('images/map_icon_search.png',width:ScreenUtil().setWidth(18), height: ScreenUtil().setHeight(18)),
@@ -224,33 +317,50 @@ class MapPracticeState extends State<MapPractice>{
                   fillColor: Colors.white,
                 ),
 
+
               ),
               suggestionsCallback: (pattern) async {
-                return _getSuggestions(pattern);
+                if(pattern.isEmpty){
+                  return _searchHistory;
+                }
+                else{
+                  return _getSuggestions(pattern);
+                }
               },
               itemBuilder: (context, suggestion) {
                 return ListTile(
-                  leading: Image.asset('images/map_search_local.png',width: ScreenUtil().setWidth(16.0),height: ScreenUtil().setHeight(16.0)),
-                  title: Text(suggestion, 
-                  style: TextStyle(color: HexColor('#353535'),fontSize: ScreenUtil().setSp(14.0)),),
+                  shape: Border(
+                    bottom: BorderSide(color: HexColor('#E9E9E9'),width: 1.0,),
+                  ),
+                  leading: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 4, 16),
+                    child: Image.asset('images/map_search_local.png',width: ScreenUtil().setWidth(16.0),height: ScreenUtil().setHeight(16.0)),
+                  ),
+                  title: Text(suggestion,
+                    style: TextStyle(color: HexColor('#353535'),fontSize: ScreenUtil().setSp(14.0)),),
+                  trailing: (_searchController.text.isEmpty) ? IconButton(onPressed: (){
+                    setState(() {
+                      _searchHistory.remove(suggestion);
+                    });
+                  },
+                    icon: Image.asset('images/map_search_delete.png', width: ScreenUtil().setWidth(16.0),height: ScreenUtil().setHeight(16.0),),) :null ,
                 );
-              },
 
+              },
               onSuggestionSelected: (suggestion) {
                 setState(() {
                   _names.clear();
                   _locations.clear();
                   _searchController.text = suggestion;
                   searchingword= _searchController.text;
+                  if(!_searchHistory.contains(searchingword)){
+                    _searchHistory.add(searchingword);
+                  }
                 });
                 searchingname();
               },
               suggestionsBoxDecoration:  SuggestionsBoxDecoration(
-                color:HexColor('#E9E9E9'),
-                /*constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height,
-                  maxWidth: MediaQuery.of(context).size.width,
-                )*/
+                color:HexColor('#F3F3F3'),
               ),
             ),
           ),
@@ -271,42 +381,73 @@ class MapPracticeState extends State<MapPractice>{
     return matches;
   }
 
-
-
-  /*@override
-  void dispose(){
-    _scrollController.dispose();
-    super.dispose();
-  }*/
   List<bool> _isSelected = List.generate(9,(index) => false);
   List<String> buttonlist = ['전체', '내과 연계', '산부인과 연계','치과 연계', '정신과 연계', '피부과 연계', '안과 연계', '이비인후과 연계', '기타 연계' ];
   List<Widget> _buildButtons(){
-    return List.generate(9, (index) {
-      return ElevatedButton(onPressed: (){
-        setState(() {
-          for(int i=0; i<_isSelected.length; i++){
-            _isSelected[i] = (i == index);
-          }
-          _names.clear();
-          _locations.clear();
-          id=index;
-        });
-        searchingtag();
-      },
-        style: ElevatedButton.styleFrom(
-            primary: _isSelected[index] ? HexColor('#E76D3B') : Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(26.0),
-            )
-        ),
-        child: Text("${buttonlist[index]}", style: TextStyle(
-          color: _isSelected[index] ? Colors.white : Colors.black,
-          fontSize: ScreenUtil().setSp(12),
-        ),),
-      );
-    });
-  }
+    return List.generate(buttonlist.length, (index) =>
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Container(decoration: BoxDecoration(
+              boxShadow:[
+                BoxShadow(
+                  color: HexColor('#00000040'),
+                  blurRadius:4,
+                )
+              ]
+          ),
+            child: ElevatedButton(onPressed: (){
+              setState(() {
+                for(int i=0; i<_isSelected.length; i++){
+                  _isSelected[i] = (i == index);
+                }
+                _names.clear();
+                _locations.clear();
+                id=index;
+              });
+              searchingtag();
+              Showreview();
+            },
+              style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
+                  primary: _isSelected[index] ? HexColor('#E76D3B') : Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(26.0),
+                  )
+              ),
+              child: Text("${buttonlist[index]}", style: TextStyle(
+                color: _isSelected[index] ? Colors.white : Colors.black,
+                fontSize: ScreenUtil().setSp(12),
+              ),),
+            ),
+          ),
 
+        ));
+  }
+  List<Widget> reviewButtons=[];
+
+  List<Widget> _buildreview(){
+    if(_names.isNotEmpty)
+    {Showreview();
+    final buttons= List.generate(review_hospital.length, (index) =>
+        Padding(padding: const EdgeInsets.all(4.0),
+            child:SizedBox(width: 30,
+              child: ElevatedButton(
+                onPressed: (){},
+                child: Text("${review_hospital[index]} 연계 ${review_num[index]}"),
+              ),
+            )
+        ));
+    return List<Widget>.generate(
+      (buttons.length/3).ceil(), (index) => Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: buttons.sublist(index*3, (index +1)*3),
+    ),);
+    }
+    else{
+      print('데이터 없음');
+      return [];
+    }
+  }
 
 
   @override
@@ -315,26 +456,42 @@ class MapPracticeState extends State<MapPractice>{
     double height = MediaQuery.of(context).size.height;
     ScreenUtil.init(context);
     return Scaffold(
-      body: Stack(
-        children: [
-          //밑에 깔리는 지도화면
-          googlemap(),
-          //검색창 기능들 구현
-          Positioned(top: ScreenUtil().setHeight(56.0), left: ScreenUtil().setWidth(16.0),
+        body: Stack(
+          children: [
+            //밑에 깔리는 지도화면
+            googlemap(),
+            //검색창 기능들 구현
+            Positioned(top: ScreenUtil().setHeight(56.0), left: ScreenUtil().setWidth(16.0),
                 child: searchingbar()),
 
-          //태그 버튼들
-         Positioned(top: ScreenUtil().setHeight(116.0), left: ScreenUtil().setWidth(32.0),
-           child: SingleChildScrollView( scrollDirection: Axis.horizontal,
-             child: Row(
-               children: _buildButtons(),
-             ),
-           ),
-          ),
+            //태그 버튼들
+            Positioned(top: ScreenUtil().setHeight(116.0), left: ScreenUtil().setWidth(32.0),
+              child: Container( width: MediaQuery.of(context).size.width,
+                child: SingleChildScrollView( scrollDirection: Axis.horizontal,
+                  child: Row(
+                      children:[
+                        Row(
+                          children:  _buildButtons(),
+                        ),
+                        SizedBox(
+                          width: 30,
+                        )
+                      ]
+                  ),
+                ),
+              ),
+            ),
 
 
-          Container(//내위치 가져오는 floating button
-            child: Positioned(bottom:ScreenUtil().setHeight(88), right:ScreenUtil().setHeight(16),//네비게이션바 크기만큼 bottom으로 지정할것
+            Container(//내위치 가져오는 floating button
+              child: Positioned(bottom:ScreenUtil().setHeight(88), right:ScreenUtil().setHeight(16),//네비게이션바 크기만큼 bottom으로 지정할것
+                child: Container(decoration: BoxDecoration(
+                    boxShadow:[
+                      BoxShadow(color: HexColor('#00000033'),
+                        blurRadius:4,
+                      )
+                    ]
+                ),
                   child: FloatingActionButton(
                     backgroundColor: Colors.white,
                     onPressed: _getCurrentLocation,
@@ -345,12 +502,11 @@ class MapPracticeState extends State<MapPractice>{
                     ),
                   ),
                 ),
-          ),
-
-          //drawer
-
-          Visibility(visible: (searchingword.isNotEmpty && _suggestions != null) || (id!=0),
-            child: DraggableScrollableSheet(
+              ),
+            ),
+            //drawer
+            Visibility(visible: (searchingword.isNotEmpty && _suggestions != null) || (id!=0),
+              child: DraggableScrollableSheet(
                 initialChildSize: 0.39,
                 minChildSize: 0.39,
                 maxChildSize: 0.8,
@@ -361,102 +517,58 @@ class MapPracticeState extends State<MapPractice>{
                       decoration: BoxDecoration(
                         color: Colors.white,
                       ),
-                      child: ListView.builder(
+                      child: Expanded(
+                        child: ListView.builder(
                           controller: myScrollController,
                           itemCount: _names.length,
                           itemBuilder: (BuildContext context , int index){
-                            //스크랩 애니메이션 작동안됨
-                            List<bool> _isScrap = List.generate(_names.length, (index) => true);
-                            void _scrapFunction(int index){
-                              setState(() {
-                                _isScrap[index]= !_isScrap[index];
-                              });
-                            }
+                            int reviewButtons= (_buildreview().length/3).ceil();
+                            List<Widget> rowChildren = [];
+                            /*for(int i=0; i<3; i++){
+                              int buttonindex = index*3 + i;
+                              if(buttonindex < _buildreview().length){
+                                rowChildren.add(Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(2.0),
+                                      child:reviewButtons[buttonindex],
+                                    )
+                                ));
+                              }
+                            }*/
                             return ListTile(
-                                title:Text(_names[index],textAlign: TextAlign.left,
+                              title:Text(_names[index],textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontSize: ScreenUtil().setSp(16.0),
                                 ),),
-                                subtitle: Padding(
-                                  padding: const EdgeInsets.only(top:4.0),
-                                  child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                    children:[
-                                      Text(_locations[index],textAlign: TextAlign.left,
+                              subtitle: Padding(
+                                padding: const EdgeInsets.only(top:4.0),
+                                child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                  children:[
+                                    Text(_locations[index],textAlign: TextAlign.left,
                                       style: TextStyle(
-                                        fontSize: ScreenUtil().setSp(12.0)
+                                          fontSize: ScreenUtil().setSp(12.0)
                                       ),),
-                                      Row(
-                                          children:[
-                                            ToggleButtons(children: [
-                                              Text("내과 연계 19"),
-                                              Text("산부인과 연계 6"),
-                                              Text("치과 연계 8"),
-                                            ],
-                                              isSelected: [false, false, false],
-                                            )
-                                          ]),
-                                    ],
-                                  ),
+                                    //Row(children: rowChildren,),
+                                  ],
                                 ),
+                              ),
 
-                              trailing: IconButton(
-                                icon: _isScrap[index] ? Image.asset('images/scrap.png',
-                                    width:ScreenUtil().setWidth(24),
-                                    height: ScreenUtil().setHeight(24)) : Image.asset('images/map_list_icon_star_fill.png',
-                                    width:ScreenUtil().setWidth(24),
-                                    height: ScreenUtil().setHeight(24)),
-                              onPressed: (){
-                                //스크랩 기능 구현
-                                _scrapFunction(index);
-                              },),
+
                               onTap: (){
-                                  //상세페이지로 넘어가도록 명시
+                                //상세페이지로 넘어가도록 명시
                               },
                             );
                           },),
+                      ),
                     ),
                   );
                 },),
 
-          ),
-        ],
-      )
+            ),
+          ],
+        )
     );
 
   }
-
-
-
-
-  //위치 권한 접근 조정하는 기능
-  void _permission() async{
-    var requestStatus = await Permission.location.request();
-    var status = await Permission.location.status;
-    if(requestStatus.isGranted && status.isLimited){
-      //제한적 동의를 한경우 중 요청에 동의하였을때
-      print("isGranted");
-      if(await Permission.locationWhenInUse.serviceStatus.isEnabled){
-        //요청동의 + gps켜짐
-        _getCurrentLocation;
-      }else{
-        //요청 동의 + gps 꺼짐
-        print("serviceStatus IsDisabled");
-      }
-    }
-    else if(requestStatus.isPermanentlyDenied || status.isPermanentlyDenied){
-      //권한 요청 거부, 설정화면에서 변경해야할 경우, 다시묻지 않음 선택
-      print("isPermanentlyDenied");
-      openAppSettings();
-    }else if(status.isRestricted){
-      //권한 요청 거부, 해당 권한에 대해 요청을 표시하지 않도록 선택해 설정 화면에서 변경해야함
-      print("isRestricted");
-      openAppSettings();
-    }else if(status.isDenied){
-      //권한 요청 거절
-      print("isDenied");
-    }
-
-  }
-
 
 }
