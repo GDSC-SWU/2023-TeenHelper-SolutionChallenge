@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google/google_map/MapPractice.dart';
-import 'package:google/home/home_screen.dart';
+import 'package:google/home/HomeScreen.dart';
 import 'package:google/map/map_screen.dart';
 import 'package:google/mypage/mypage_screen.dart';
 
@@ -18,7 +18,7 @@ class _navigationbar_screen extends State<navigationbar_screen> {
   int _selectedIndex = 0;
 
   static List<Widget> pages = <Widget>[
-    home_screen(),
+    HomeScreen(),
     // map_detail(),
     MapPractice(),
     map_screen(),
