@@ -186,6 +186,8 @@ flutter:
     - images/map_button_bell_off.png
     - images/map_button_bell_on.png
     - images/chatbot.png
+    - images/event_image.png
+    - images/
     - .env
 
 

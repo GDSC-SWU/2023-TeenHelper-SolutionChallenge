@@ -114,7 +114,7 @@ Widget _buildmiddle(){
             }
         ),
         SizedBox(
-          height: ScreenUtil().setHeight(24.0),
+          height: (MediaQuery.of(context).size.height * 0.03),
         ),
         
         Padding(
@@ -150,7 +150,7 @@ Widget _buildmiddle(){
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
-          margin: EdgeInsets.only(left: ScreenUtil().setWidth(16)),
+          margin: EdgeInsets.only(left: (MediaQuery.of(context).size.width * 0.02)),
           child: Text("최근 이벤트",
             style: TextStyle(
               color: Color(0xff353535),
@@ -159,7 +159,7 @@ Widget _buildmiddle(){
               fontWeight: FontWeight.bold,
             ),),
         ),
-        SizedBox(height: ScreenUtil().setHeight(8)),
+        SizedBox(height: (MediaQuery.of(context).size.height * 0.01)),
         StreamBuilder<List<EventModel>>(
               stream: streamEvent(), // streamReview(review),
               builder: (context, asyncSnapshot) {
@@ -181,7 +181,7 @@ Widget _buildmiddle(){
                   List<EventModel> event = asyncSnapshot.data!;
                   return SizedBox(
                     width: MediaQuery.of(context).size.width,
-                    height: ScreenUtil().setHeight(200),
+                    height: (MediaQuery.of(context).size.height * 0.25),
                     child: ListView.builder(
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
@@ -193,14 +193,17 @@ Widget _buildmiddle(){
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             InkWell(
-                              child: Image.asset('images/event_image.png', width: ScreenUtil().setHeight(170), height: ScreenUtil().setHeight(78)),
+                              child: SizedBox(
+                                  width: ScreenUtil().setWidth(170),
+                                  height: ScreenUtil().setWidth(78),
+                                  child: Image.asset('images/event_image.png')),
                               onTap: () => {
                                 launchUrl(url, mode: LaunchMode.externalApplication),
                               },
                             ),
-                            SizedBox(height: ScreenUtil().setHeight(4)),
+                            SizedBox(height: (MediaQuery.of(context).size.height * 0.005)),
                             Container(
-                              margin: EdgeInsets.only(left: ScreenUtil().setWidth(8)),
+                              margin: EdgeInsets.only(left: (MediaQuery.of(context).size.width * 0.01)),
                               width: ScreenUtil().setWidth(144),
                               child: Text(
                                 event[index].title,
