@@ -5,6 +5,7 @@ import 'package:google/google_map/MapPractice.dart';
 import 'package:google/home/HomeScreen.dart';
 import 'package:google/map/map_screen.dart';
 import 'package:google/mypage/mypage_screen.dart';
+import "package:google/AIchatbot/chat_bot.dart";
 
 class navigationbar_screen extends StatefulWidget {
   const navigationbar_screen();
@@ -14,15 +15,14 @@ class navigationbar_screen extends StatefulWidget {
 }
 
 class _navigationbar_screen extends State<navigationbar_screen> {
-
   int _selectedIndex = 0;
 
   static List<Widget> pages = <Widget>[
     HomeScreen(),
     // map_detail(),
     MapPractice(),
-    map_screen(),
-    // chat_screen(),
+    //map_screen(),
+    ChatBotScreen(),
     mypage_screen()
   ];
 
@@ -48,26 +48,37 @@ class _navigationbar_screen extends State<navigationbar_screen> {
           items: [
             BottomNavigationBarItem(
                 label: 'home',
-                icon: Image.asset('images/home_off.png', width: ScreenUtil().setWidth(48), height: ScreenUtil().setHeight(48)),
-                activeIcon: Image.asset('images/home_on.png', width: ScreenUtil().setWidth(48), height: ScreenUtil().setHeight(48))
-            ),
+                icon: Image.asset('images/home_off.png',
+                    width: ScreenUtil().setWidth(48),
+                    height: ScreenUtil().setHeight(48)),
+                activeIcon: Image.asset('images/home_on.png',
+                    width: ScreenUtil().setWidth(48),
+                    height: ScreenUtil().setHeight(48))),
             BottomNavigationBarItem(
                 label: 'map',
-                icon: Image.asset('images/map_off.png', width: ScreenUtil().setWidth(48), height: ScreenUtil().setHeight(48)),
-                activeIcon: Image.asset('images/map_on.png', width: ScreenUtil().setWidth(48), height: ScreenUtil().setHeight(48))
-            ),
+                icon: Image.asset('images/map_off.png',
+                    width: ScreenUtil().setWidth(48),
+                    height: ScreenUtil().setHeight(48)),
+                activeIcon: Image.asset('images/map_on.png',
+                    width: ScreenUtil().setWidth(48),
+                    height: ScreenUtil().setHeight(48))),
             BottomNavigationBarItem(
                 label: 'chat',
-                icon: Image.asset('images/chat_off.png', width: ScreenUtil().setWidth(48), height: ScreenUtil().setHeight(48)),
-                activeIcon: Image.asset('images/chat_on.png', width: ScreenUtil().setWidth(48), height: ScreenUtil().setHeight(48))
-            ),
+                icon: Image.asset('images/chat_off.png',
+                    width: ScreenUtil().setWidth(48),
+                    height: ScreenUtil().setHeight(48)),
+                activeIcon: Image.asset('images/chat_on.png',
+                    width: ScreenUtil().setWidth(48),
+                    height: ScreenUtil().setHeight(48))),
             BottomNavigationBarItem(
                 label: 'mypage',
-                icon: Image.asset('images/mypage_off.png', width: ScreenUtil().setWidth(48), height: ScreenUtil().setHeight(48)),
-                activeIcon: Image.asset('images/mypage_on.png', width: ScreenUtil().setWidth(48), height: ScreenUtil().setHeight(48))
-            ),
+                icon: Image.asset('images/mypage_off.png',
+                    width: ScreenUtil().setWidth(48),
+                    height: ScreenUtil().setHeight(48)),
+                activeIcon: Image.asset('images/mypage_on.png',
+                    width: ScreenUtil().setWidth(48),
+                    height: ScreenUtil().setHeight(48))),
           ],
-        )
-    );
+        ));
   }
 }

@@ -12,6 +12,7 @@
         android:icon="@mipmap/ic_launcher">
         <uses-library android:name="org.apache.http.legacy"
         android:required="false"/>
+        <!-- YOURAPIKEY 로 변경하기 -->
        <meta-data android:name="com.google.android.geo.API_KEY"
            android:value="YOURAPIKEY"/>
        <meta-data
