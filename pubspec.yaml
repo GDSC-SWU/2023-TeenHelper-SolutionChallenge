@@ -45,6 +45,7 @@ dependencies:
   firebase_auth: ^4.2.6
   firebase_core: ^2.7.1
   cloud_firestore: ^4.4.1
+  carousel_slider: ^4.2.1
   flutter:
     sdk: flutter
 

@@ -84,7 +84,7 @@ Widget _buildmiddle(){
             ),
 
             child: Text(
-              , textAlign: TextAlign.center,
+              "TeenHelper에게 건강 질문하기", textAlign: TextAlign.center,
               style: TextStyle(
               color: Colors.white, fontSize: ScreenUtil().setSp(14.0)
             ),
