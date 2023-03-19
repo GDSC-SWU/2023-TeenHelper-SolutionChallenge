@@ -16,11 +16,11 @@ class ScrapModel {
   //서버로부터 map형태의 자료를 MessageModel형태의 자료로 변환해주는 역할을 수행함.
   factory ScrapModel.fromMap({required Map<String,dynamic> map}){
     return ScrapModel(
-        scrap: map['scrap']??'',
-        uid: map['uid']??'',
-        shelter_name: map['shelter_name']??'',
-        shelter_id: map['shelter_id']??'',
-        shelter_location: map['shelter_location']
+      scrap: map['scrap']??'',
+      uid: map['uid']??'',
+      shelter_name: map['shelter_name']??'',
+      shelter_id: map['shelter_id']??'',
+      shelter_location: map['shelter_location']
     );
   }
 

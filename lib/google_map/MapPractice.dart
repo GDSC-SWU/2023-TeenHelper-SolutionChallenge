@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:google/google_map/scrap_model.dart';
+import 'package:google/map/map_detail.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:geolocator/geolocator.dart';
@@ -633,6 +634,8 @@ class MapPracticeState extends State<MapPractice>{
                                   }
                               ),
                               onTap: (){
+                                Navigator.push(
+                                    context, MaterialPageRoute(builder: (_) =>map_detail(_shelterId[index])));
                                 //상세페이지로 넘어가도록 명시
                               },
                             );
