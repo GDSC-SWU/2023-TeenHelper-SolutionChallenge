@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  flutter_dotenv: ^5.0.2
   flutter_typeahead: ^4.3.7
   autocomplete_textfield: ^2.0.1
   geocoding: ^2.0.5
@@ -41,18 +42,15 @@ dependencies:
   geolocator: ^9.0.2
   http: ^0.13.5
   floating_search_bar: ^0.3.0
+  carousel_slider: ^4.2.1
   google_sign_in: ^5.4.4
   firebase_auth: ^4.2.6
   firebase_core: ^2.7.1
   cloud_firestore: ^4.4.1
   fluttertoast: ^8.2.1
-  flutter_dotenv: ^5.0.2
   url_launcher: ^6.1.10
   flutter:
     sdk: flutter
-
-
-
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -94,6 +92,9 @@ flutter:
     - images/marker.png
     - images/location_current_icon.png
     - images/map_icon_mark.png
+    - images/map_search_local.png
+    - images/scrap.png
+    - images/map_list_icon_star_fill.png
     - images/login_button.png
     - images/login_image_complete.png
     - images/join_button.png
@@ -176,6 +177,7 @@ flutter:
     - images/map_button_bell_off.png
     - images/map_button_bell_on.png
     - .env
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
