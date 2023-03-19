@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,9 +6,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:google/navigationbar_screen.dart';
 import 'package:hexcolor/hexcolor.dart';
-
-import '../AIchatbot/chat_bot.dart';
 import '../mypage/nick_model.dart';
+import 'event_model.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 class HomeScreen extends StatefulWidget{
   const HomeScreen({super.key});
 
@@ -40,8 +40,10 @@ class HomeScreenState extends State<HomeScreen> {
           color: Colors.white,
         ),
         _buildTop(),
-        Positioned(top:ScreenUtil().setHeight(340.0),
-            child:_buildmiddle() )
+        Positioned(top: (MediaQuery.of(context).size.height * 0.4125),
+            child:_buildmiddle() ),
+        Positioned(top:(MediaQuery.of(context).size.height * 0.69),
+            child:_buildbottom() )
       ],
     );
 }
@@ -49,7 +51,7 @@ class HomeScreenState extends State<HomeScreen> {
 Widget _buildTop()
 {
   return CarouselSlider(
-    options: CarouselOptions(height: ScreenUtil().setHeight(524.0),
+    options: CarouselOptions(height: (MediaQuery.of(context).size.height * 0.655),
         aspectRatio: 2.0,
         autoPlay: true,autoPlayInterval: Duration(seconds:5),
     enlargeCenterPage: true,
@@ -137,10 +139,129 @@ Widget _buildmiddle(){
                 color: Colors.white, fontSize: ScreenUtil().setSp(14.0)
               ),
               )),
-        )
+        ),
       ],
     );
 }
+
+  Widget _buildbottom(){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Container(
+          margin: EdgeInsets.only(left: ScreenUtil().setWidth(16)),
+          child: Text("최근 이벤트",
+            style: TextStyle(
+              color: Color(0xff353535),
+              fontSize: 16,
+              fontFamily: "Spoqa Han Sans Neo",
+              fontWeight: FontWeight.bold,
+            ),),
+        ),
+        SizedBox(height: ScreenUtil().setHeight(8)),
+        StreamBuilder<List<EventModel>>(
+              stream: streamEvent(), // streamReview(review),
+              builder: (context, asyncSnapshot) {
+                if(!asyncSnapshot.hasData) {
+                  return Container(
+                    margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(48), ScreenUtil().setWidth(40), 0, 0),
+                    child: Text("내가 쓴 후기가 없습니다.\n쉼터를 통해 의료적 지원을 받은 경험이 있다면 \n후기를 공유해주세요!",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Color(0xFF6B6B6B),
+                          fontSize: 14,
+                        )
+                    ),
+                  );
+                } else if (asyncSnapshot.hasError){
+                  return const Center(
+                    child: Text('오류가 발생했습니다.'),);
+                } else {
+                  List<EventModel> event = asyncSnapshot.data!;
+                  return SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: ScreenUtil().setHeight(200),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: event.length,
+                      itemBuilder: (context, index) {
+                        final url = Uri.parse(event[index].URL);
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            InkWell(
+                              child: Image.asset('images/event_image.png', width: ScreenUtil().setHeight(170), height: ScreenUtil().setHeight(78)),
+                              onTap: () => {
+                                launchUrl(url, mode: LaunchMode.externalApplication),
+                              },
+                            ),
+                            SizedBox(height: ScreenUtil().setHeight(4)),
+                            Container(
+                              margin: EdgeInsets.only(left: ScreenUtil().setWidth(8)),
+                              width: ScreenUtil().setWidth(144),
+                              child: Text(
+                                event[index].title,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: Color(0xff353535),
+                                  fontSize: 10,
+                                  fontFamily: "Spoqa Han Sans Neo",
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(8), ScreenUtil().setHeight(4), 0, 0),
+                              width: ScreenUtil().setWidth(144),
+                              child: Text(
+                                event[index].timeStamp,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: Color(0xff6b6b6b),
+                                  fontSize: 10,
+                                  fontFamily: "Spoqa Han Sans Neo",
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  );
+                }
+              }
+          ),
+      ],
+    );
+  }
+
+  Stream<List<EventModel>> streamEvent() {
+    try{
+      // print("id는 $hospital");
+      var db = FirebaseFirestore.instance;
+      db.settings = const Settings(persistenceEnabled: false);
+      final Stream<QuerySnapshot> snapshots = db.collection('Notification2').snapshots();
+      return snapshots.map((querySnapshot){
+        List<EventModel> event = [];//querySnapshot을 message로 옮기기 위해 List<MessageModel> 선언
+        querySnapshot.docs.forEach((element) { //해당 컬렉션에 존재하는 모든 docs를 순회하며 messages 에 데이터를 추가한다.
+          event.add(
+              EventModel.fromMap(
+                  map:element.data() as Map<String, dynamic>
+              )
+          );
+        });
+        print("길이는 ${event.length}");
+        return event; //QuerySnapshot에서 List<MessageModel> 로 변경이 됐으니 반환
+      });
+    } catch(ex){
+      log('error)',error: ex.toString(),stackTrace: StackTrace.current);
+      return Stream.error(ex.toString());
+    }
+  }
 
   Stream<List<NickModel>> streamNickname() {
     try{
