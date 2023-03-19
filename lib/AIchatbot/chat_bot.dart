@@ -92,15 +92,16 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
               title: Text('TeenHelper', style: TextStyle(color: Colors.black)),
               centerTitle: true,
               shadowColor: Color(0xFF353535),
-              leading: IconButton(
+              /*leading: IconButton(
                   icon: Icon(
                     Icons.arrow_back_ios,
                     color: Color(0xFF0E0D0D),
                     size: 5 * 5,
                   ),
                   onPressed: () {
+                    Navigator.pop(context);
                     print("Icon Button clicked");
-                  }),
+                  }),*/
             ),
           )),
       body: Stack(

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:google/navigationbar_screen.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 import '../AIchatbot/chat_bot.dart';
@@ -119,8 +120,8 @@ Widget _buildmiddle(){
           child: ElevatedButton(
               onPressed: (){
             //챗봇으로 연결
-            Navigator.push(
-                context, MaterialPageRoute(builder: (_) => ChatBotScreen()));
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (_) => navigationbar_screen(2.toInt())));
           },
               style: ElevatedButton.styleFrom(
                 primary: HexColor('#E76D3B'),

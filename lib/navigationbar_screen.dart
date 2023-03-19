@@ -8,14 +8,17 @@ import 'package:google/mypage/mypage_screen.dart';
 import "package:google/AIchatbot/chat_bot.dart";
 
 class navigationbar_screen extends StatefulWidget {
-  const navigationbar_screen();
+
+  final int number;
+  const navigationbar_screen(this.number);
 
   @override
   _navigationbar_screen createState() => _navigationbar_screen();
 }
 
 class _navigationbar_screen extends State<navigationbar_screen> {
-  int _selectedIndex = 0;
+
+  late int _selectedIndex = widget.number;
 
   static List<Widget> pages = <Widget>[
     HomeScreen(),

@@ -35,7 +35,7 @@ class _choice extends State<choice> {
             if (snapshot.hasData && item.length < 1) {
               return join_screen();
             } else if (snapshot.hasData && item.length >= 1) {
-              return navigationbar_screen();
+              return navigationbar_screen(0.toInt());
             } else {
               return loading();
             }

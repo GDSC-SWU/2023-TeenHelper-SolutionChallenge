@@ -77,7 +77,7 @@ class _genderscreen extends State<gender_screen> {
                     child: Image.asset('images/join_button.png'),
                     onTap: () => {
                       Navigator.pushReplacement(
-                          context, MaterialPageRoute(builder: (_) => navigationbar_screen()))
+                          context, MaterialPageRoute(builder: (_) => navigationbar_screen(0.toInt())))
                     },
                   )
               )
