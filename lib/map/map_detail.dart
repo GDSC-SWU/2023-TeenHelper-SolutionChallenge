@@ -104,7 +104,7 @@ class _map_detail extends State<map_detail> {
                 Navigator.pop(context)
               },
             ),
-            actions: [
+            /*actions: [
               StreamBuilder<List<ScrapModel>>(
                 stream: streamScrap(),
                 builder: (context, asyncSnapshot) {
@@ -129,7 +129,7 @@ class _map_detail extends State<map_detail> {
                   }
                 }
               ),
-            ],
+            ],*/
             title: Text(_mynamelist[0],
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -173,11 +173,30 @@ class _map_detail extends State<map_detail> {
                         },),
                       Container(
                         margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(8), ScreenUtil().setHeight(0), ScreenUtil().setWidth(16), ScreenUtil().setHeight(0)),
-                        child: InkWell(
-                          child: Image.asset('images/detail_btn_bell.png', width: ScreenUtil().setWidth(160), height: ScreenUtil().setHeight(34)),
-                          onTap: () => {
-
-                          },),
+                        child: StreamBuilder<List<ScrapModel>>(
+                            stream: streamScrap(),
+                            builder: (context, asyncSnapshot) {
+                              if(asyncSnapshot.hasData && asyncSnapshot.data!.isNotEmpty) {
+                                List<ScrapModel> scrap = asyncSnapshot.data!;
+                                return InkWell(
+                                    child: Image.asset(scrap[0].scrap == true ? 'images/map_button_bell_on.png' : 'images/map_button_bell_off.png'),
+                                    onTap: () => {
+                                      scrapEdit(!scrap[0].scrap, _myidlist[0])
+                                    }
+                                );
+                              } else if (asyncSnapshot.hasError) {
+                                return const Center(
+                                  child: Text('오류가 발생했습니다.'),);
+                              } else {
+                                return InkWell(
+                                  child: Image.asset('images/map_button_bell_off.png'),
+                                  onTap: () => {
+                                    scrapWrite(true, _mynamelist[0], _myidlist[0], _mylocationlist[0]),
+                                  },
+                                );
+                              }
+                            }
+                        ),
                       ),
                     ],
                   ),
