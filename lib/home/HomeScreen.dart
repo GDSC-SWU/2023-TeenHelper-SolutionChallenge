@@ -42,7 +42,7 @@ class HomeScreenState extends State<HomeScreen> {
         _buildTop(),
         Positioned(top: (MediaQuery.of(context).size.height * 0.4125),
             child:_buildmiddle() ),
-        Positioned(top:(MediaQuery.of(context).size.height * 0.69),
+        Positioned(top:(MediaQuery.of(context).size.height * 0.67),
             child:_buildbottom() )
       ],
     );
@@ -145,100 +145,103 @@ Widget _buildmiddle(){
 }
 
   Widget _buildbottom(){
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Container(
-          margin: EdgeInsets.only(left: (MediaQuery.of(context).size.width * 0.02)),
-          child: Text("최근 이벤트",
-            style: TextStyle(
-              color: Color(0xff353535),
-              fontSize: 16,
-              fontFamily: "Spoqa Han Sans Neo",
-              fontWeight: FontWeight.bold,
-            ),),
-        ),
-        SizedBox(height: (MediaQuery.of(context).size.height * 0.01)),
-        StreamBuilder<List<EventModel>>(
-              stream: streamEvent(), // streamReview(review),
-              builder: (context, asyncSnapshot) {
-                if(!asyncSnapshot.hasData) {
-                  return Container(
-                    margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(48), ScreenUtil().setWidth(40), 0, 0),
-                    child: Text("내가 쓴 후기가 없습니다.\n쉼터를 통해 의료적 지원을 받은 경험이 있다면 \n후기를 공유해주세요!",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Color(0xFF6B6B6B),
-                          fontSize: 14,
-                        )
-                    ),
-                  );
-                } else if (asyncSnapshot.hasError){
-                  return const Center(
-                    child: Text('오류가 발생했습니다.'),);
-                } else {
-                  List<EventModel> event = asyncSnapshot.data!;
-                  return SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: (MediaQuery.of(context).size.height * 0.25),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: event.length,
-                      itemBuilder: (context, index) {
-                        final url = Uri.parse(event[index].URL);
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            InkWell(
-                              child: SizedBox(
-                                  width: ScreenUtil().setWidth(170),
-                                  height: ScreenUtil().setWidth(78),
-                                  child: Image.asset('images/event_image.png')),
-                              onTap: () => {
-                                launchUrl(url, mode: LaunchMode.externalApplication),
-                              },
-                            ),
-                            SizedBox(height: (MediaQuery.of(context).size.height * 0.005)),
-                            Container(
-                              margin: EdgeInsets.only(left: (MediaQuery.of(context).size.width * 0.01)),
-                              width: ScreenUtil().setWidth(144),
-                              child: Text(
-                                event[index].title,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Color(0xff353535),
-                                  fontSize: 10,
-                                  fontFamily: "Spoqa Han Sans Neo",
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(8), ScreenUtil().setHeight(4), 0, 0),
-                              width: ScreenUtil().setWidth(144),
-                              child: Text(
-                                event[index].timeStamp,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Color(0xff6b6b6b),
-                                  fontSize: 10,
-                                  fontFamily: "Spoqa Han Sans Neo",
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  );
-                }
-              }
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            margin: EdgeInsets.only(left: (MediaQuery.of(context).size.width * 0.02)),
+            child: Text("최근 이벤트",
+              style: TextStyle(
+                color: Color(0xff353535),
+                fontSize: 16,
+                fontFamily: "Spoqa Han Sans Neo",
+                fontWeight: FontWeight.bold,
+              ),),
           ),
-      ],
+          SizedBox(height: (MediaQuery.of(context).size.height * 0.01)),
+          StreamBuilder<List<EventModel>>(
+                stream: streamEvent(), // streamReview(review),
+                builder: (context, asyncSnapshot) {
+                  if(!asyncSnapshot.hasData) {
+                    return Container(
+                      margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(48), ScreenUtil().setWidth(40), 0, 0),
+                      child: Text("내가 쓴 후기가 없습니다.\n쉼터를 통해 의료적 지원을 받은 경험이 있다면 \n후기를 공유해주세요!",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Color(0xFF6B6B6B),
+                            fontSize: 14,
+                          )
+                      ),
+                    );
+                  } else if (asyncSnapshot.hasError){
+                    return const Center(
+                      child: Text('오류가 발생했습니다.'),);
+                  } else {
+                    List<EventModel> event = asyncSnapshot.data!;
+                    return SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: (MediaQuery.of(context).size.height * 0.25),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: event.length,
+                        itemBuilder: (context, index) {
+                          final url = Uri.parse(event[index].URL);
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              InkWell(
+                                child: SizedBox(
+                                    width: ScreenUtil().setWidth(170),
+                                    height: ScreenUtil().setWidth(78),
+                                    child: Image.asset('images/event_image.png')),
+                                onTap: () => {
+                                  launchUrl(url, mode: LaunchMode.externalApplication),
+                                },
+                              ),
+                              SizedBox(height: (MediaQuery.of(context).size.height * 0.005)),
+                              Container(
+                                margin: EdgeInsets.only(left: (MediaQuery.of(context).size.width * 0.01)),
+                                width: ScreenUtil().setWidth(144),
+                                child: Text(
+                                  event[index].title,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Color(0xff353535),
+                                    fontSize: 10,
+                                    fontFamily: "Spoqa Han Sans Neo",
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(8), ScreenUtil().setHeight(4), 0, 0),
+                                width: ScreenUtil().setWidth(144),
+                                child: Text(
+                                  event[index].timeStamp,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Color(0xff6b6b6b),
+                                    fontSize: 10,
+                                    fontFamily: "Spoqa Han Sans Neo",
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    );
+                  }
+                }
+            ),
+        ],
+      ),
     );
   }
 
