@@ -313,7 +313,7 @@ class _review_write_screen extends State<review_write_screen> {
                                     child: Image.asset(hospital_9 ? 'images/review_on_9.png': 'images/review_off_9.png'),
                                     onTap: () => {
                                       setState((){
-                                        hospital = "안과";
+                                        hospital = "기타";
                                         hospitalId = 9;
                                         hospital_9 = !hospital_9;
                                         hospital_1 == true ? (hospital_1 = !hospital_1) : '';
