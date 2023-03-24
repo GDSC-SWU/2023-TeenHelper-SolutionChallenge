@@ -351,7 +351,7 @@ class _review_write_screen extends State<review_write_screen> {
                 Container(
                   margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(16), ScreenUtil().setHeight(24), ScreenUtil().setWidth(16), 0),
                   child: SizedBox(
-                    height: ScreenUtil().setHeight(200),
+                    height: ScreenUtil().setHeight(144),
                     width: ScreenUtil().setWidth(328),
                     child: TextField(
                       maxLines: null,
@@ -359,6 +359,7 @@ class _review_write_screen extends State<review_write_screen> {
                       keyboardType: TextInputType.multiline,
                       controller: _reviewTextEditController,
                       decoration: InputDecoration(
+                        // contentPadding: EdgeInsets.fromLTRB( 0, 16,  0, 0),
                         filled: true,
                         fillColor: Color(0xFFF3F3F3),
                         enabledBorder: OutlineInputBorder(
@@ -370,6 +371,7 @@ class _review_write_screen extends State<review_write_screen> {
                             borderSide: BorderSide(color: Color(0xFFF3F3F3))
                         ),
                         hintText: '여기에서 후기를 작성하세요.\n다른 사용자들이 후기를 볼 수 있으니,\n배려하는 마음을 담아 작성해주세요.',
+                        hintStyle: TextStyle(fontSize: 14.0, color: Color(0XFFBBBBBB)),
                       ),
                     ),
                   ),
