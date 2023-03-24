@@ -46,93 +46,95 @@ class login_screen extends StatelessWidget {
   Widget build(BuildContext context) {
     final PageController controller = PageController(initialPage: 0,);
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Center(
-                  child: SizedBox(
-                    width: ScreenUtil().setWidth(272),
-                    height: ScreenUtil().setHeight(660),
-                    child: PageView(
-                    controller: controller,
-                    children: [
-                      Column(
-                        children: [
-                          SizedBox(width: ScreenUtil().setWidth(272), height: ScreenUtil().setHeight(154)),
-                          Image.asset('images/login_image_complete1.png', width: ScreenUtil().setWidth(272), height: ScreenUtil().setHeight(272)),
-                          SizedBox(width: ScreenUtil().setWidth(272), height: ScreenUtil().setHeight(64)),
-                          Image.asset('images/login_text_complete1.png'),
-                    ]
-                      ),
-                      Column(
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Center(
+                    child: SizedBox(
+                      width: ScreenUtil().setWidth(272),
+                      height: ScreenUtil().setHeight(660),
+                      child: PageView(
+                      controller: controller,
+                      children: [
+                        Column(
                           children: [
                             SizedBox(width: ScreenUtil().setWidth(272), height: ScreenUtil().setHeight(154)),
-                            Image.asset('images/login_image_complete2.png', width: ScreenUtil().setWidth(272), height: ScreenUtil().setHeight(272)),
+                            Image.asset('images/login_image_complete1.png', width: ScreenUtil().setWidth(272), height: ScreenUtil().setHeight(272)),
                             SizedBox(width: ScreenUtil().setWidth(272), height: ScreenUtil().setHeight(64)),
-                            Image.asset('images/login_text_complete2.png'),
-                          ]
-                      ),
-                      Column(
-                          children: [
-                            SizedBox(width: ScreenUtil().setWidth(272), height: ScreenUtil().setHeight(154)),
-                            Image.asset('images/login_image_complete3.png', width: ScreenUtil().setWidth(272), height: ScreenUtil().setHeight(272)),
-                            SizedBox(width: ScreenUtil().setWidth(272), height: ScreenUtil().setHeight(64)),
-                            Image.asset('images/login_text_complete3.png'),
-                          ]
-                      ),
-                      Column(
-                          children: [
-                            SizedBox(width: ScreenUtil().setWidth(272), height: ScreenUtil().setHeight(154)),
-                            Image.asset('images/login_image_complete4.png', width: ScreenUtil().setWidth(272), height: ScreenUtil().setHeight(272)),
-                            SizedBox(width: ScreenUtil().setWidth(272), height: ScreenUtil().setHeight(64)),
-                            Image.asset('images/login_text_complete4.png'),
-                          ]
-                      ),
-                    ],
+                            Image.asset('images/login_text_complete1.png'),
+                      ]
+                        ),
+                        Column(
+                            children: [
+                              SizedBox(width: ScreenUtil().setWidth(272), height: ScreenUtil().setHeight(154)),
+                              Image.asset('images/login_image_complete2.png', width: ScreenUtil().setWidth(272), height: ScreenUtil().setHeight(272)),
+                              SizedBox(width: ScreenUtil().setWidth(272), height: ScreenUtil().setHeight(64)),
+                              Image.asset('images/login_text_complete2.png'),
+                            ]
+                        ),
+                        Column(
+                            children: [
+                              SizedBox(width: ScreenUtil().setWidth(272), height: ScreenUtil().setHeight(154)),
+                              Image.asset('images/login_image_complete3.png', width: ScreenUtil().setWidth(272), height: ScreenUtil().setHeight(272)),
+                              SizedBox(width: ScreenUtil().setWidth(272), height: ScreenUtil().setHeight(64)),
+                              Image.asset('images/login_text_complete3.png'),
+                            ]
+                        ),
+                        Column(
+                            children: [
+                              SizedBox(width: ScreenUtil().setWidth(272), height: ScreenUtil().setHeight(154)),
+                              Image.asset('images/login_image_complete4.png', width: ScreenUtil().setWidth(272), height: ScreenUtil().setHeight(272)),
+                              SizedBox(width: ScreenUtil().setWidth(272), height: ScreenUtil().setHeight(64)),
+                              Image.asset('images/login_text_complete4.png'),
+                            ]
+                        ),
+                      ],
+                  ),
+                    )
+              ),
+              SmoothPageIndicator(
+                controller: controller,
+                count:  4,
+                axisDirection: Axis.horizontal,
+                effect:  SlideEffect(
+                    spacing:  8.0,
+                    radius:  4.0,
+                    dotWidth:  8.0,
+                    dotHeight:  8.0,
+                    paintStyle:  PaintingStyle.fill,
+                    strokeWidth:  1.5,
+                    dotColor:  Color(0xFFE9E9E9),
+                    activeDotColor: Color(0xFFE76D3B)
                 ),
-                  )
-            ),
-            SmoothPageIndicator(
-              controller: controller,
-              count:  4,
-              axisDirection: Axis.horizontal,
-              effect:  SlideEffect(
-                  spacing:  8.0,
-                  radius:  4.0,
-                  dotWidth:  8.0,
-                  dotHeight:  8.0,
-                  paintStyle:  PaintingStyle.fill,
-                  strokeWidth:  1.5,
-                  dotColor:  Color(0xFFE9E9E9),
-                  activeDotColor: Color(0xFFE76D3B)
               ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                  margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(16),ScreenUtil().setHeight(14),ScreenUtil().setWidth(16),ScreenUtil().setHeight(0)),
-                  child: InkWell(
-                    child: Image.asset('images/login_button.png'),
-                    onTap: () => {
-                      google_SignIn(),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                    margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(16),ScreenUtil().setHeight(14),ScreenUtil().setWidth(16),ScreenUtil().setHeight(0)),
+                    child: InkWell(
+                      child: Image.asset('images/login_button.png'),
+                      onTap: () => {
+                        google_SignIn(),
 
-                    },
-                  )
-                  /*SizedBox(
-                    width: double.infinity,
-                    height: 96.h,
-                    child: IconButton(
-                      onPressed: () {
-                        google_SignIn();
-                        },
-                      icon: Image.asset('images/login_button.png'),
-                      constraints: const BoxConstraints(),
-                    ),
-                  )*/
+                      },
+                    )
+                    /*SizedBox(
+                      width: double.infinity,
+                      height: 96.h,
+                      child: IconButton(
+                        onPressed: () {
+                          google_SignIn();
+                          },
+                        icon: Image.asset('images/login_button.png'),
+                        constraints: const BoxConstraints(),
+                      ),
+                    )*/
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
