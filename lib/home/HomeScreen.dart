@@ -152,7 +152,7 @@ Widget _buildmiddle(){
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-            margin: EdgeInsets.only(left: (MediaQuery.of(context).size.width * 0.02)),
+            margin: EdgeInsets.only(left: (MediaQuery.of(context).size.width * 0.065)),
             child: Text("최근 이벤트",
               style: TextStyle(
                 color: Color(0xff353535),
@@ -168,7 +168,7 @@ Widget _buildmiddle(){
                   if(!asyncSnapshot.hasData) {
                     return Container(
                       margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(48), ScreenUtil().setWidth(40), 0, 0),
-                      child: Text("내가 쓴 후기가 없습니다.\n쉼터를 통해 의료적 지원을 받은 경험이 있다면 \n후기를 공유해주세요!",
+                      child: Text("",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Color(0xFF6B6B6B),
@@ -205,8 +205,8 @@ Widget _buildmiddle(){
                               ),
                               SizedBox(height: (MediaQuery.of(context).size.height * 0.005)),
                               Container(
-                                margin: EdgeInsets.only(left: (MediaQuery.of(context).size.width * 0.01)),
-                                width: ScreenUtil().setWidth(144),
+                                margin: EdgeInsets.only(left: (MediaQuery.of(context).size.width * 0.06)),
+                                width: ScreenUtil().setWidth(125),
                                 child: Text(
                                   event[index].title,
                                   overflow: TextOverflow.ellipsis,
@@ -219,7 +219,7 @@ Widget _buildmiddle(){
                                 ),
                               ),
                               Container(
-                                margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(8), ScreenUtil().setHeight(4), 0, 0),
+                                margin: EdgeInsets.fromLTRB((MediaQuery.of(context).size.width * 0.06), ScreenUtil().setHeight(4), 0, 0),
                                 width: ScreenUtil().setWidth(144),
                                 child: Text(
                                   event[index].timeStamp,
