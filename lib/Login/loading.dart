@@ -28,7 +28,8 @@ class _loading extends State<loading> {
           children: <Widget>[
             Container(
               margin: EdgeInsets.fromLTRB(ScreenUtil().setSp(16), 0, ScreenUtil().setSp(16), 0),
-                child: Image.asset('images/loading.gif')
+                child: SizedBox(width:ScreenUtil().setWidth(216), height: ScreenUtil().setHeight(130),
+                    child: Image.asset('images/loading.gif'))
             ),
           ],
         ),
