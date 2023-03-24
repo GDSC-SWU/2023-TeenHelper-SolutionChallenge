@@ -163,7 +163,7 @@ class _map_detail extends State<map_detail> {
                   // alignment: Alignment.center,
                   margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(16), ScreenUtil().setHeight(16), ScreenUtil().setWidth(0), ScreenUtil().setHeight(0)),
                   width: ScreenUtil().setWidth(360),
-                  height: ScreenUtil().setHeight(70),
+                  height: ScreenUtil().setHeight(50),
                   child: Row(
                     children: [
                       InkWell(
@@ -179,7 +179,7 @@ class _map_detail extends State<map_detail> {
                               if(asyncSnapshot.hasData && asyncSnapshot.data!.isNotEmpty) {
                                 List<ScrapModel> scrap = asyncSnapshot.data!;
                                 return InkWell(
-                                    child: Image.asset(scrap[0].scrap == true ? 'images/map_button_bell_on.png' : 'images/map_button_bell_off.png'),
+                                    child: Image.asset(scrap[0].scrap == true ? 'images/map_button_bell_on.png' : 'images/map_button_bell_off.png', width: ScreenUtil().setWidth(160), height: ScreenUtil().setHeight(34)),
                                     onTap: () => {
                                       scrapEdit(!scrap[0].scrap, _myidlist[0])
                                     }
@@ -189,7 +189,7 @@ class _map_detail extends State<map_detail> {
                                   child: Text('오류가 발생했습니다.'),);
                               } else {
                                 return InkWell(
-                                  child: Image.asset('images/map_button_bell_off.png'),
+                                  child: Image.asset('images/map_button_bell_off.png', width: ScreenUtil().setWidth(160), height: ScreenUtil().setHeight(34)),
                                   onTap: () => {
                                     scrapWrite(true, _mynamelist[0], _myidlist[0], _mylocationlist[0]),
                                   },
@@ -224,7 +224,7 @@ class _map_detail extends State<map_detail> {
                       children: [
                         Container(
                             margin: EdgeInsets.only(left: ScreenUtil().setWidth(16)),
-                            child: Image.asset('images/detail_icon_address.png')),
+                            child: Image.asset('images/detail_icon_address.png', height: ScreenUtil().setHeight(17))),
                         Container(
                           margin: EdgeInsets.only(left: ScreenUtil().setWidth(8)),
                           child: Text(_mylocationlist[0],
@@ -254,7 +254,7 @@ class _map_detail extends State<map_detail> {
                       children: [
                         Container(
                             margin: EdgeInsets.only(left: ScreenUtil().setWidth(16)),
-                            child: Image.asset('images/detail_icon_gender.png')),
+                            child: Image.asset('images/detail_icon_gender.png', height: ScreenUtil().setHeight(16))),
                         Container(
                           margin: EdgeInsets.only(left: ScreenUtil().setWidth(8)),
                           child: Text(_mygenderlist[0],
@@ -284,7 +284,7 @@ class _map_detail extends State<map_detail> {
                       children: [
                         Container(
                             margin: EdgeInsets.only(left: ScreenUtil().setWidth(16)),
-                            child: Image.asset('images/detail_icon_type.png')),
+                            child: Image.asset('images/detail_icon_type.png', height: ScreenUtil().setHeight(16))),
                         Container(
                           margin: EdgeInsets.only(left: ScreenUtil().setWidth(8)),
                           child: Text(_mytypelist[0],
@@ -321,7 +321,7 @@ class _map_detail extends State<map_detail> {
                               children: [
                                 Container(
                                     margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(16), ScreenUtil().setHeight(4), 0, 0),
-                                    child: Image.asset('images/detail_icon_time.png')),
+                                    child: Image.asset('images/detail_icon_time.png', height: ScreenUtil().setHeight(16))),
                                 Container(
                                     margin: EdgeInsets.only(left: ScreenUtil().setWidth(8)),
                                     child: Row (
@@ -508,7 +508,7 @@ class _map_detail extends State<map_detail> {
                       children: [
                         Container(
                             margin: EdgeInsets.only(left: ScreenUtil().setWidth(16)),
-                            child: Image.asset('images/detail_icon_email.png')),
+                            child: Image.asset('images/detail_icon_email.png', height: ScreenUtil().setHeight(16))),
                         Container(
                           margin: EdgeInsets.only(left: ScreenUtil().setWidth(8)),
                           child: Text(_myemaillist[0],
@@ -556,81 +556,189 @@ class _map_detail extends State<map_detail> {
                                       Container(
                                         margin: EdgeInsets.only(left: ScreenUtil().setWidth(16)),
                                         child: InkWell(
-                                          child: Image.asset(hospital_1 ? 'images/detail_btn_1.png': 'images/detail_btn_1_on.png'),
+                                          child: Image.asset(hospital_1 ? 'images/detail_btn_1.png': 'images/detail_btn_1_on.png' , height: ScreenUtil().setHeight(27)),
                                           onTap: () => {
-
+                                            setState((){
+                                              hospital_subject = "내과";
+                                              hospital = 1;
+                                              hospital_1 = !hospital_1;
+                                              hospital_2 == true ? (hospital_2 = !hospital_2) : '';
+                                              hospital_3 == true ? (hospital_3 = !hospital_3) : '';
+                                              hospital_4 == true ? (hospital_4 = !hospital_4) : '';
+                                              hospital_5 == true ? (hospital_5 = !hospital_5) : '';
+                                              hospital_6 == true ? (hospital_6 = !hospital_6) : '';
+                                              hospital_7 == true ? (hospital_7 = !hospital_7) : '';
+                                              hospital_8 == true ? (hospital_8 = !hospital_8) : '';
+                                              hospital_9 == true ? (hospital_9 = !hospital_9) : '';
+                                            }),
                                           },
                                         ),
                                       ),
                                       Container(
                                         margin: EdgeInsets.only(left: ScreenUtil().setWidth(4)),
                                         child: InkWell(
-                                          child: Image.asset(hospital_2 ? 'images/detail_btn_2_on.png': 'images/detail_btn_2.png'),
+                                          child: Image.asset(hospital_2 ? 'images/detail_btn_2_on.png': 'images/detail_btn_2.png', height: ScreenUtil().setHeight(27)),
                                           onTap: () => {
-
+                                            setState((){
+                                              hospital = 2;
+                                              hospital_subject = "산부인과";
+                                              hospital_2 = !hospital_2;
+                                              hospital_1 == false ? (hospital_1 = !hospital_1) : '';
+                                              hospital_3 == true ? (hospital_3 = !hospital_3) : '';
+                                              hospital_4 == true ? (hospital_4 = !hospital_4) : '';
+                                              hospital_5 == true ? (hospital_5 = !hospital_5) : '';
+                                              hospital_6 == true ? (hospital_6 = !hospital_6) : '';
+                                              hospital_7 == true ? (hospital_7 = !hospital_7) : '';
+                                              hospital_8 == true ? (hospital_8 = !hospital_8) : '';
+                                              hospital_9 == true ? (hospital_9 = !hospital_9) : '';
+                                            })
                                           },
                                         ),
                                       ),
                                       Container(
                                         margin: EdgeInsets.only(left: ScreenUtil().setWidth(4)),
                                         child: InkWell(
-                                          child: Image.asset(hospital_3 ? 'images/detail_btn_3_on.png': 'images/detail_btn_3.png'),
+                                          child: Image.asset(hospital_3 ? 'images/detail_btn_3_on.png': 'images/detail_btn_3.png', height: ScreenUtil().setHeight(27)),
                                           onTap: () => {
-
+                                            setState((){
+                                              hospital = 3;
+                                              hospital_subject = "치과";
+                                              hospital_3 = !hospital_3;
+                                              hospital_1 == false ? (hospital_1 = !hospital_1) : '';
+                                              hospital_2 == true ? (hospital_2 = !hospital_2) : '';
+                                              hospital_4 == true ? (hospital_4 = !hospital_4) : '';
+                                              hospital_5 == true ? (hospital_5 = !hospital_5) : '';
+                                              hospital_6 == true ? (hospital_6 = !hospital_6) : '';
+                                              hospital_7 == true ? (hospital_7 = !hospital_7) : '';
+                                              hospital_8 == true ? (hospital_8 = !hospital_8) : '';
+                                              hospital_9 == true ? (hospital_9 = !hospital_9) : '';
+                                            })
                                           },
                                         ),
                                       ),
                                       Container(
                                         margin: EdgeInsets.only(left: ScreenUtil().setWidth(4)),
                                         child: InkWell(
-                                          child: Image.asset(hospital_4 ? 'images/detail_btn_4_on.png': 'images/detail_btn_4.png'),
+                                          child: Image.asset(hospital_4 ? 'images/detail_btn_4_on.png': 'images/detail_btn_4.png', height: ScreenUtil().setHeight(27)),
                                           onTap: () => {
-
+                                            setState((){
+                                              hospital = 4;
+                                              hospital_subject = "정신과";
+                                              hospital_4 = !hospital_4;
+                                              hospital_1 == false ? (hospital_1 = !hospital_1) : '';
+                                              hospital_2 == true ? (hospital_2 = !hospital_2) : '';
+                                              hospital_3 == true ? (hospital_3 = !hospital_3) : '';
+                                              hospital_5 == true ? (hospital_5 = !hospital_5) : '';
+                                              hospital_6 == true ? (hospital_6 = !hospital_6) : '';
+                                              hospital_7 == true ? (hospital_7 = !hospital_7) : '';
+                                              hospital_8 == true ? (hospital_8 = !hospital_8) : '';
+                                              hospital_9 == true ? (hospital_9 = !hospital_9) : '';
+                                            })
                                           },
                                         ),
                                       ),
                                       Container(
                                         margin: EdgeInsets.only(left: ScreenUtil().setWidth(4)),
                                         child: InkWell(
-                                          child: Image.asset(hospital_5 ? 'images/detail_btn_5_on.png': 'images/detail_btn_5.png'),
+                                          child: Image.asset(hospital_5 ? 'images/detail_btn_5_on.png': 'images/detail_btn_5.png', height: ScreenUtil().setHeight(27)),
                                           onTap: () => {
-
+                                            setState((){
+                                              hospital = 5;
+                                              hospital_subject = "피부과";
+                                              hospital_5 = !hospital_5;
+                                              hospital_1 == false ? (hospital_1 = !hospital_1) : '';
+                                              hospital_2 == true ? (hospital_2 = !hospital_2) : '';
+                                              hospital_3 == true ? (hospital_3 = !hospital_3) : '';
+                                              hospital_4 == true ? (hospital_4 = !hospital_4) : '';
+                                              hospital_6 == true ? (hospital_6 = !hospital_6) : '';
+                                              hospital_7 == true ? (hospital_7 = !hospital_7) : '';
+                                              hospital_8 == true ? (hospital_8 = !hospital_8) : '';
+                                              hospital_9 == true ? (hospital_9 = !hospital_9) : '';
+                                            })
                                           },
                                         ),
                                       ),
                                       Container(
                                         margin: EdgeInsets.only(left: ScreenUtil().setWidth(4)),
                                         child: InkWell(
-                                          child: Image.asset(hospital_6 ? 'images/detail_btn_6_on.png': 'images/detail_btn_6.png'),
+                                          child: Image.asset(hospital_6 ? 'images/detail_btn_6_on.png': 'images/detail_btn_6.png', height: ScreenUtil().setHeight(27)),
                                           onTap: () => {
-
+                                            setState((){
+                                              hospital = 6;
+                                              hospital_subject = "안과";
+                                              hospital_6 = !hospital_6;
+                                              hospital_1 == false ? (hospital_1 = !hospital_1) : '';
+                                              hospital_2 == true ? (hospital_2 = !hospital_2) : '';
+                                              hospital_3 == true ? (hospital_3 = !hospital_3) : '';
+                                              hospital_4 == true ? (hospital_4 = !hospital_4) : '';
+                                              hospital_5 == true ? (hospital_5 = !hospital_5) : '';
+                                              hospital_7 == true ? (hospital_7 = !hospital_7) : '';
+                                              hospital_8 == true ? (hospital_8 = !hospital_8) : '';
+                                              hospital_9 == true ? (hospital_9 = !hospital_9) : '';
+                                            })
                                           },
                                         ),
                                       ),
                                       Container(
                                         margin: EdgeInsets.only(left: ScreenUtil().setWidth(4)),
                                         child: InkWell(
-                                          child:Image.asset(hospital_7 ? 'images/detail_btn_7_on.png': 'images/detail_btn_7.png'),
+                                          child:Image.asset(hospital_7 ? 'images/detail_btn_7_on.png': 'images/detail_btn_7.png', height: ScreenUtil().setHeight(27)),
                                           onTap: () => {
-
+                                            setState((){
+                                              hospital = 7;
+                                              hospital_subject = "정형외과";
+                                              hospital_7 = !hospital_7;
+                                              hospital_1 == false ? (hospital_1 = !hospital_1) : '';
+                                              hospital_2 == true ? (hospital_2 = !hospital_2) : '';
+                                              hospital_3 == true ? (hospital_3 = !hospital_3) : '';
+                                              hospital_4 == true ? (hospital_4 = !hospital_4) : '';
+                                              hospital_5 == true ? (hospital_5 = !hospital_5) : '';
+                                              hospital_6 == true ? (hospital_6 = !hospital_6) : '';
+                                              hospital_8 == true ? (hospital_8 = !hospital_8) : '';
+                                              hospital_9 == true ? (hospital_9 = !hospital_9) : '';
+                                            })
                                           },
                                         ),
                                       ),
                                       Container(
                                         margin: EdgeInsets.only(left: ScreenUtil().setWidth(4)),
                                         child: InkWell(
-                                          child: Image.asset(hospital_8 ? 'images/detail_btn_8_on.png': 'images/detail_btn_8.png'),
+                                          child: Image.asset(hospital_8 ? 'images/detail_btn_8_on.png': 'images/detail_btn_8.png', height: ScreenUtil().setHeight(27)),
                                           onTap: () => {
-
+                                            setState((){
+                                              hospital = 8;
+                                              hospital_subject = "이비인후과";
+                                              hospital_8 = !hospital_8;
+                                              hospital_1 == false ? (hospital_1 = !hospital_1) : '';
+                                              hospital_2 == true ? (hospital_2 = !hospital_2) : '';
+                                              hospital_3 == true ? (hospital_3 = !hospital_3) : '';
+                                              hospital_4 == true ? (hospital_4 = !hospital_4) : '';
+                                              hospital_5 == true ? (hospital_5 = !hospital_5) : '';
+                                              hospital_6 == true ? (hospital_6 = !hospital_6) : '';
+                                              hospital_7 == true ? (hospital_7 = !hospital_7) : '';
+                                              hospital_9 == true ? (hospital_9 = !hospital_9) : '';
+                                            }),
                                           },
                                         ),
                                       ),
                                       Container(
                                         margin: EdgeInsets.only(left: ScreenUtil().setWidth(4)),
                                         child: InkWell(
-                                          child: Image.asset(hospital_9 ? 'images/detail_btn_9_on.png': 'images/detail_btn_9.png'),
+                                          child: Image.asset(hospital_9 ? 'images/detail_btn_9_on.png': 'images/detail_btn_9.png', height: ScreenUtil().setHeight(27)),
                                           onTap: () => {
-
+                                            setState((){
+                                              hospital = 9;
+                                              hospital_subject = "기타";
+                                              hospital_9 = !hospital_9;
+                                              hospital_1 == false ? (hospital_1 = !hospital_1) : '';
+                                              hospital_2 == true ? (hospital_2 = !hospital_2) : '';
+                                              hospital_3 == true ? (hospital_3 = !hospital_3) : '';
+                                              hospital_4 == true ? (hospital_4 = !hospital_4) : '';
+                                              hospital_5 == true ? (hospital_5 = !hospital_5) : '';
+                                              hospital_6 == true ? (hospital_6 = !hospital_6) : '';
+                                              hospital_7 == true ? (hospital_7 = !hospital_7) : '';
+                                              hospital_8 == true ? (hospital_8 = !hospital_8) : '';
+                                            }),
                                           },
                                         ),
                                       ),
@@ -667,7 +775,7 @@ class _map_detail extends State<map_detail> {
                                       Container(
                                         margin: EdgeInsets.only(left: ScreenUtil().setWidth(16)),
                                         child: InkWell(
-                                          child: Image.asset(hospital_1 ? 'images/detail_btn_1.png': 'images/detail_btn_1_on.png'),
+                                          child: Image.asset(hospital_1 ? 'images/detail_btn_1.png': 'images/detail_btn_1_on.png', height: ScreenUtil().setHeight(27)),
                                           onTap: () => {
                                             setState((){
                                               hospital_subject = "내과";
@@ -688,7 +796,7 @@ class _map_detail extends State<map_detail> {
                                       Container(
                                         margin: EdgeInsets.only(left: ScreenUtil().setWidth(4)),
                                         child: InkWell(
-                                          child: Image.asset(hospital_2 ? 'images/detail_btn_2_on.png': 'images/detail_btn_2.png'),
+                                          child: Image.asset(hospital_2 ? 'images/detail_btn_2_on.png': 'images/detail_btn_2.png', height: ScreenUtil().setHeight(27)),
                                           onTap: () => {
                                             setState((){
                                               hospital = 2;
@@ -709,7 +817,7 @@ class _map_detail extends State<map_detail> {
                                       Container(
                                         margin: EdgeInsets.only(left: ScreenUtil().setWidth(4)),
                                         child: InkWell(
-                                          child: Image.asset(hospital_3 ? 'images/detail_btn_3_on.png': 'images/detail_btn_3.png'),
+                                          child: Image.asset(hospital_3 ? 'images/detail_btn_3_on.png': 'images/detail_btn_3.png', height: ScreenUtil().setHeight(27)),
                                           onTap: () => {
                                             setState((){
                                               hospital = 3;
@@ -730,7 +838,7 @@ class _map_detail extends State<map_detail> {
                                       Container(
                                         margin: EdgeInsets.only(left: ScreenUtil().setWidth(4)),
                                         child: InkWell(
-                                          child: Image.asset(hospital_4 ? 'images/detail_btn_4_on.png': 'images/detail_btn_4.png'),
+                                          child: Image.asset(hospital_4 ? 'images/detail_btn_4_on.png': 'images/detail_btn_4.png', height: ScreenUtil().setHeight(27)),
                                           onTap: () => {
                                             setState((){
                                               hospital = 4;
@@ -751,7 +859,7 @@ class _map_detail extends State<map_detail> {
                                       Container(
                                         margin: EdgeInsets.only(left: ScreenUtil().setWidth(4)),
                                         child: InkWell(
-                                          child: Image.asset(hospital_5 ? 'images/detail_btn_5_on.png': 'images/detail_btn_5.png'),
+                                          child: Image.asset(hospital_5 ? 'images/detail_btn_5_on.png': 'images/detail_btn_5.png', height: ScreenUtil().setHeight(27)),
                                           onTap: () => {
                                             setState((){
                                               hospital = 5;
@@ -772,7 +880,7 @@ class _map_detail extends State<map_detail> {
                                       Container(
                                         margin: EdgeInsets.only(left: ScreenUtil().setWidth(4)),
                                         child: InkWell(
-                                          child: Image.asset(hospital_6 ? 'images/detail_btn_6_on.png': 'images/detail_btn_6.png'),
+                                          child: Image.asset(hospital_6 ? 'images/detail_btn_6_on.png': 'images/detail_btn_6.png', height: ScreenUtil().setHeight(27)),
                                           onTap: () => {
                                             setState((){
                                               hospital = 6;
@@ -793,7 +901,7 @@ class _map_detail extends State<map_detail> {
                                       Container(
                                         margin: EdgeInsets.only(left: ScreenUtil().setWidth(4)),
                                         child: InkWell(
-                                          child:Image.asset(hospital_7 ? 'images/detail_btn_7_on.png': 'images/detail_btn_7.png'),
+                                          child:Image.asset(hospital_7 ? 'images/detail_btn_7_on.png': 'images/detail_btn_7.png', height: ScreenUtil().setHeight(27)),
                                           onTap: () => {
                                             setState((){
                                               hospital = 7;
@@ -814,7 +922,7 @@ class _map_detail extends State<map_detail> {
                                       Container(
                                         margin: EdgeInsets.only(left: ScreenUtil().setWidth(4)),
                                         child: InkWell(
-                                          child: Image.asset(hospital_8 ? 'images/detail_btn_8_on.png': 'images/detail_btn_8.png'),
+                                          child: Image.asset(hospital_8 ? 'images/detail_btn_8_on.png': 'images/detail_btn_8.png', height: ScreenUtil().setHeight(27)),
                                           onTap: () => {
                                             setState((){
                                               hospital = 8;
@@ -835,7 +943,7 @@ class _map_detail extends State<map_detail> {
                                       Container(
                                         margin: EdgeInsets.only(left: ScreenUtil().setWidth(4)),
                                         child: InkWell(
-                                          child: Image.asset(hospital_9 ? 'images/detail_btn_9_on.png': 'images/detail_btn_9.png'),
+                                          child: Image.asset(hospital_9 ? 'images/detail_btn_9_on.png': 'images/detail_btn_9.png', height: ScreenUtil().setHeight(27)),
                                           onTap: () => {
                                             setState((){
                                               hospital = 9;
