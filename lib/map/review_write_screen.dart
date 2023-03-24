@@ -128,7 +128,7 @@ class _review_write_screen extends State<review_write_screen> {
                                 Container(
                                   margin: EdgeInsets.only(left: ScreenUtil().setWidth(25)),
                                   child: InkWell(
-                                    child: Image.asset(hospital_1 ? 'images/review_on_1.png': 'images/review_off_1.png'),
+                                    child: Image.asset(hospital_1 ? 'images/review_on_1.png': 'images/review_off_1.png', height: ScreenUtil().setHeight(32)),
                                     onTap: () => {
                                       setState((){
                                         hospital = "내과";
@@ -149,7 +149,7 @@ class _review_write_screen extends State<review_write_screen> {
                                 Container(
                                   margin: EdgeInsets.only(left: ScreenUtil().setWidth(11)),
                                   child: InkWell(
-                                    child: Image.asset(hospital_2 ? 'images/review_on_2.png': 'images/review_off_2.png'),
+                                    child: Image.asset(hospital_2 ? 'images/review_on_2.png': 'images/review_off_2.png', height: ScreenUtil().setHeight(32)),
                                     onTap: () => {
                                       setState((){
                                         hospital = "산부인과";
@@ -170,7 +170,7 @@ class _review_write_screen extends State<review_write_screen> {
                                 Container(
                                   margin: EdgeInsets.only(left: ScreenUtil().setWidth(12)),
                                   child: InkWell(
-                                    child: Image.asset(hospital_3 ? 'images/review_on_3.png': 'images/review_off_3.png'),
+                                    child: Image.asset(hospital_3 ? 'images/review_on_3.png': 'images/review_off_3.png', height: ScreenUtil().setHeight(32)),
                                     onTap: () => {
                                       setState((){
                                         hospital = "치과";
@@ -198,7 +198,7 @@ class _review_write_screen extends State<review_write_screen> {
                                 Container(
                                   margin: EdgeInsets.only(left: ScreenUtil().setWidth(25)),
                                   child: InkWell(
-                                    child: Image.asset(hospital_4 ? 'images/review_on_4.png': 'images/review_off_4.png'),
+                                    child: Image.asset(hospital_4 ? 'images/review_on_4.png': 'images/review_off_4.png', height: ScreenUtil().setHeight(32)),
                                     onTap: () => {
                                       setState((){
                                         hospital = "정신과";
@@ -219,7 +219,7 @@ class _review_write_screen extends State<review_write_screen> {
                                 Container(
                                   margin: EdgeInsets.only(left: ScreenUtil().setWidth(12)),
                                   child: InkWell(
-                                    child: Image.asset(hospital_5 ? 'images/review_on_5.png': 'images/review_off_5.png'),
+                                    child: Image.asset(hospital_5 ? 'images/review_on_5.png': 'images/review_off_5.png', height: ScreenUtil().setHeight(32)),
                                     onTap: () => {
                                       setState((){
                                         hospital = "피부과";
@@ -240,7 +240,7 @@ class _review_write_screen extends State<review_write_screen> {
                                 Container(
                                   margin: EdgeInsets.only(left: ScreenUtil().setWidth(12)),
                                   child: InkWell(
-                                    child: Image.asset(hospital_6 ? 'images/review_on_6.png': 'images/review_off_6.png'),
+                                    child: Image.asset(hospital_6 ? 'images/review_on_6.png': 'images/review_off_6.png', height: ScreenUtil().setHeight(32)),
                                     onTap: () => {
                                       setState((){
                                         hospital = "안과";
@@ -268,7 +268,7 @@ class _review_write_screen extends State<review_write_screen> {
                                 Container(
                                   margin: EdgeInsets.only(left: ScreenUtil().setWidth(25)),
                                   child: InkWell(
-                                    child: Image.asset(hospital_7 ? 'images/review_on_7.png': 'images/review_off_7.png'),
+                                    child: Image.asset(hospital_7 ? 'images/review_on_7.png': 'images/review_off_7.png', height: ScreenUtil().setHeight(32)),
                                     onTap: () => {
                                       setState((){
                                         hospital = "정형외과";
@@ -289,7 +289,7 @@ class _review_write_screen extends State<review_write_screen> {
                                 Container(
                                   margin: EdgeInsets.only(left: ScreenUtil().setWidth(6)),
                                   child: InkWell(
-                                    child: Image.asset(hospital_8 ? 'images/review_on_8.png': 'images/review_off_8.png'),
+                                    child: Image.asset(hospital_8 ? 'images/review_on_8.png': 'images/review_off_8.png', height: ScreenUtil().setHeight(32)),
                                     onTap: () => {
                                       setState((){
                                         hospital = "이비인후과";
@@ -310,7 +310,7 @@ class _review_write_screen extends State<review_write_screen> {
                                 Container(
                                   margin: EdgeInsets.only(left: ScreenUtil().setWidth(5)),
                                   child: InkWell(
-                                    child: Image.asset(hospital_9 ? 'images/review_on_9.png': 'images/review_off_9.png'),
+                                    child: Image.asset(hospital_9 ? 'images/review_on_9.png': 'images/review_off_9.png', height: ScreenUtil().setHeight(32)),
                                     onTap: () => {
                                       setState((){
                                         hospital = "기타";
