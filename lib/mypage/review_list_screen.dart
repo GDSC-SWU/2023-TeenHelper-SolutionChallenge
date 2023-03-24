@@ -91,13 +91,15 @@ class _review_list_screen extends State<review_list_screen> {
                                           style: TextStyle( color: Color(0XFF353535), fontSize: 12,)),
                                     ),
                                     Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
                                           Container(
-                                            margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(0), ScreenUtil().setHeight(10), ScreenUtil().setWidth(16), ScreenUtil().setHeight(0)),
-                                            child: Image.asset('images/mylist_${review[index].hospital_id.toString()}.png')
+                                            margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(0), ScreenUtil().setHeight(10), ScreenUtil().setWidth(0), ScreenUtil().setHeight(0)),
+                                                child: Image.asset('images/mylist_${review[index].hospital_id.toString()}.png', height: ScreenUtil().setHeight(16))
                                           ),
                                           Container(
-                                            margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(0), ScreenUtil().setHeight(10), ScreenUtil().setWidth(16), ScreenUtil().setHeight(0)),
+                                            margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(8), ScreenUtil().setHeight(12), ScreenUtil().setWidth(0), ScreenUtil().setHeight(0)),
                                             child: Text(review[index].date,
                                                 style: TextStyle( color: Color(0XFF6B6B6B), fontSize: 10,)),
                                           ),
