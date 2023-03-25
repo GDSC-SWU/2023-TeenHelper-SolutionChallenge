@@ -128,7 +128,7 @@ Widget _buildmiddle(){
               style: ElevatedButton.styleFrom(
                 primary: HexColor('#E76D3B'),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24.0),
+                  borderRadius: BorderRadius.circular(26.0),
                 ),
                 minimumSize: Size(ScreenUtil().setWidth(328),ScreenUtil().setWidth(48)),
               ),
