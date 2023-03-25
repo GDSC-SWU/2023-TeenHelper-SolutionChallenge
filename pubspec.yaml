@@ -28,6 +28,8 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  smooth_page_indicator: ^1.0.1
+  flutter_dotenv: ^5.0.2
   flutter_typeahead: ^4.3.7
   autocomplete_textfield: ^2.0.1
   geocoding: ^2.0.5
@@ -41,17 +43,25 @@ dependencies:
   geolocator: ^9.0.2
   http: ^0.13.5
   floating_search_bar: ^0.3.0
+  carousel_slider: ^4.2.1
+  google_sign_in: ^5.4.4
+  firebase_auth: ^4.2.6
+  firebase_core: ^2.7.1
+  cloud_firestore: ^4.4.1
+  fluttertoast: ^8.2.1
+  url_launcher: ^6.1.10
   flutter:
     sdk: flutter
-
-
-
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  chat_gpt_sdk: ^2.0.0
+  velocity_x: ^3.6.0
+  translator: ^0.1.7
 
 dev_dependencies:
+
   flutter_test:
     sdk: flutter
 
@@ -78,6 +88,10 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   assets:
+    - images/imgslider1.png
+    - images/imgslider2.png
+    - images/imgslider3.png
+    - images/imgslider4.png
     - images/map_icon_address.png
     - images/map_icon_search.png
     - images/back_Key.png
@@ -87,6 +101,97 @@ flutter:
     - images/marker.png
     - images/location_current_icon.png
     - images/map_icon_mark.png
+    - images/map_search_local.png
+    - images/map_search_delete.png
+    - images/scrap.png
+    - images/map_list_icon_star_fill.png
+    - images/login_button.png
+    - images/login_image_complete.png
+    - images/join_button.png
+    - images/join_input_button.png
+    - images/nick_button.png
+    - images/male_on.png
+    - images/male_off.png
+    - images/female_on.png
+    - images/female_off.png
+    - images/loading.gif
+    - images/home_on.png
+    - images/home_off.png
+    - images/map_on.png
+    - images/map_off.png
+    - images/chat_on.png
+    - images/chat_off.png
+    - images/mypage_on.png
+    - images/mypage_off.png
+    - images/splash_logo.png
+    - images/detail_back_btn.png
+    - images/detail_btn_bell.png
+    - images/detail_btn_call.png
+    - images/detail_icon_address.png
+    - images/detail_icon_email.png
+    - images/detail_icon_gender.png
+    - images/detail_icon_time.png
+    - images/detail_icon_type.png
+    - images/detail_btn_1.png
+    - images/detail_btn_2.png
+    - images/detail_btn_3.png
+    - images/detail_btn_4.png
+    - images/detail_btn_5.png
+    - images/detail_btn_6.png
+    - images/detail_btn_7.png
+    - images/detail_btn_8.png
+    - images/detail_btn_9.png
+    - images/detail_btn_1_on.png
+    - images/detail_btn_2_on.png
+    - images/detail_btn_3_on.png
+    - images/detail_btn_4_on.png
+    - images/detail_btn_5_on.png
+    - images/detail_btn_6_on.png
+    - images/detail_btn_7_on.png
+    - images/detail_btn_8_on.png
+    - images/detail_btn_9_on.png
+    - images/review_floating_btn.png
+    - images/review_button.png
+    - images/review_off_1.png
+    - images/review_off_2.png
+    - images/review_off_3.png
+    - images/review_off_4.png
+    - images/review_off_5.png
+    - images/review_off_6.png
+    - images/review_off_7.png
+    - images/review_off_8.png
+    - images/review_off_9.png
+    - images/review_on_1.png
+    - images/review_on_2.png
+    - images/review_on_3.png
+    - images/review_on_4.png
+    - images/review_on_5.png
+    - images/review_on_6.png
+    - images/review_on_7.png
+    - images/review_on_8.png
+    - images/review_on_9.png
+    - images/staron_btn.png
+    - images/staroff_btn.png
+    - images/mypage_button_notification.png
+    - images/mypage_button_review.png
+    - images/mypage_button_shelter.png
+    - images/mylist_1.png
+    - images/mylist_2.png
+    - images/mylist_3.png
+    - images/mylist_4.png
+    - images/mylist_5.png
+    - images/mylist_6.png
+    - images/mylist_7.png
+    - images/mylist_8.png
+    - images/mylist_9.png
+    - images/map_button_bell_off.png
+    - images/map_button_bell_on.png
+    - images/chatbot.png
+    - images/event_image.png
+    - images/
+    - .env
+    - images/applogo.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -1,4 +1,5 @@
 # Miscellaneous
+*.env
 *.class
 *.log
 *.pyc
@@ -11,6 +12,7 @@
 migrate_working_dir/
 
 # IntelliJ related
+*.env
 *.iml
 *.ipr
 *.iws
@@ -31,6 +33,7 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+
 
 # Symbolication related
 app.*.symbols
