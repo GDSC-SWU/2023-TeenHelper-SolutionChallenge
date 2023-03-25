@@ -61,6 +61,7 @@ dependencies:
   translator: ^0.1.7
 
 dev_dependencies:
+
   flutter_test:
     sdk: flutter
 
@@ -189,6 +190,7 @@ flutter:
     - images/event_image.png
     - images/
     - .env
+    - images/applogo.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

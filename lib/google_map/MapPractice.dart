@@ -137,9 +137,6 @@ class MapPracticeState extends State<MapPractice>{
             markerId: MarkerId(address),
             position: latLng,
             icon:markerIcon,
-            infoWindow: InfoWindow(
-              title: address,
-            ),
             onTap: (){
               Navigator.push(
                 context, MaterialPageRoute(builder: (context) => map_detail(shelterid))
