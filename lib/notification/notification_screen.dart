@@ -288,7 +288,7 @@ class _notificationState extends State<notification> {
       // print("id는 $hospital");
       var db = FirebaseFirestore.instance;
       db.settings = const Settings(persistenceEnabled: false);
-      final Stream<QuerySnapshot> snapshots = db.collection('Notification2').snapshots();
+      final Stream<QuerySnapshot> snapshots = db.collection('EVENT').snapshots();
       return snapshots.map((querySnapshot){
         List<EventModel> event = [];//querySnapshot을 message로 옮기기 위해 List<MessageModel> 선언
         querySnapshot.docs.forEach((element) { //해당 컬렉션에 존재하는 모든 docs를 순회하며 messages 에 데이터를 추가한다.

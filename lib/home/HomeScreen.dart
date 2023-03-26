@@ -198,15 +198,15 @@ Widget _buildmiddle(){
                                 child: SizedBox(
                                     width: ScreenUtil().setWidth(170),
                                     height: ScreenUtil().setWidth(78),
-                                    child: Image.asset('images/event_image.png')),
+                                    child: Image.network(event[index].Img, width: ScreenUtil().setWidth(170))),
                                 onTap: () => {
                                   launchUrl(url, mode: LaunchMode.externalApplication),
                                 },
                               ),
                               SizedBox(height: (MediaQuery.of(context).size.height * 0.005)),
                               Container(
-                                margin: EdgeInsets.only(left: (MediaQuery.of(context).size.width * 0.06)),
-                                width: ScreenUtil().setWidth(125),
+                                margin: EdgeInsets.only(left: (MediaQuery.of(context).size.width * 0.085)),
+                                width: ScreenUtil().setWidth(110),
                                 child: Text(
                                   event[index].title,
                                   overflow: TextOverflow.ellipsis,
@@ -219,7 +219,7 @@ Widget _buildmiddle(){
                                 ),
                               ),
                               Container(
-                                margin: EdgeInsets.fromLTRB((MediaQuery.of(context).size.width * 0.06), ScreenUtil().setHeight(4), 0, 0),
+                                margin: EdgeInsets.fromLTRB((MediaQuery.of(context).size.width * 0.085), ScreenUtil().setHeight(4), 0, 0),
                                 width: ScreenUtil().setWidth(144),
                                 child: Text(
                                   event[index].timeStamp,
@@ -250,7 +250,7 @@ Widget _buildmiddle(){
       // print("id는 $hospital");
       var db = FirebaseFirestore.instance;
       db.settings = const Settings(persistenceEnabled: false);
-      final Stream<QuerySnapshot> snapshots = db.collection('Notification2').snapshots();
+      final Stream<QuerySnapshot> snapshots = db.collection('EVENT').snapshots();
       return snapshots.map((querySnapshot){
         List<EventModel> event = [];//querySnapshot을 message로 옮기기 위해 List<MessageModel> 선언
         querySnapshot.docs.forEach((element) { //해당 컬렉션에 존재하는 모든 docs를 순회하며 messages 에 데이터를 추가한다.
