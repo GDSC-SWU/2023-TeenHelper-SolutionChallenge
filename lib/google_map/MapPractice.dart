@@ -22,8 +22,6 @@ import 'package:geocoding/geocoding.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'mysql.dart';
 
-//<이 파일이 최종 파일임 여기에 각자 구현 기능들 추가>
-
 class MapPractice extends StatefulWidget{
   const MapPractice({super.key});
 

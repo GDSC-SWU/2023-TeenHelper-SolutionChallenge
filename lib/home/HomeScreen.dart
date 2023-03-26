@@ -50,75 +50,64 @@ class HomeScreenState extends State<HomeScreen> {
 
 Widget _buildTop()
 {
-  return CarouselSlider(
-    options: CarouselOptions(height: (MediaQuery.of(context).size.height * 0.655),
-        aspectRatio: 2.0,
-        autoPlay: true,autoPlayInterval: Duration(seconds:5),
-    enlargeCenterPage: true,
-      autoPlayCurve: Curves.fastOutSlowIn,
-      viewportFraction: 1.0,
-    ),
-  items: imgList.map((image){
-    return Builder(
-      builder:(BuildContext context){
-        return Container(
-          width: MediaQuery.of(context).size.width,
-          child: Image(image: image, fit: BoxFit.fill),
-        );
-      }
-    );
-  }).toList(),
+  return Container(
+    width: double.infinity, height: MediaQuery.of(context).size.height * 0.665,
+    child: Image.asset("images/home_image_screen.png", fit: BoxFit.fill),
   );
 }
 
 Widget _buildmiddle(){
-    return Column(
+    return Column(crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        StreamBuilder<List<NickModel>>(
-            stream: streamNickname(),
-            builder: (context, asyncSnapshot) {
-              if(!asyncSnapshot.hasData){
-                return Container(
-                  margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(16), ScreenUtil().setHeight(64), 0, 0),
-                  child: Text(
-                    "닉네임이 없습니다",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontFamily: "Spoqa Han Sans Neo",
-                      fontWeight: FontWeight.w500,
+        Container(margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(24), 0, 0, 0),
+          child: StreamBuilder<List<NickModel>>(
+              stream: streamNickname(),
+              builder: (context, asyncSnapshot) {
+                if(!asyncSnapshot.hasData){
+                  return Container(
+                    margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(24), ScreenUtil().setHeight(64), 0, 0),
+                    child: Text(
+                      "닉네임이 없습니다",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontFamily: "Spoqa Han Sans Neo",
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                );
-              } else if (asyncSnapshot.hasError){
-                List<NickModel> nickname = asyncSnapshot.data!;
-                return Container(
-                  margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(16), ScreenUtil().setHeight(64), 0, 0),
-                  child: Text(
-                    "오류가 발생했습니다.",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: ScreenUtil().setSp(16),
-                      fontFamily: "Spoqa Han Sans Neo",
-                      fontWeight: FontWeight.w500,
+                  );
+                } else if (asyncSnapshot.hasError){
+                  List<NickModel> nickname = asyncSnapshot.data!;
+                  return Container(
+                    margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(24), ScreenUtil().setHeight(64), 0, 0),
+                    child: Text(
+                      "오류가 발생했습니다.",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: ScreenUtil().setSp(16),
+                        fontFamily: "Spoqa Han Sans Neo",
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                );
-              } else {
-                List<NickModel> nickname = asyncSnapshot.data!;
-                return Text('${nickname[0].nickname}님.\n오늘도 건강한 하루 되세요!', textAlign: TextAlign.left,
-                  style: TextStyle(color: Colors.white,fontSize: ScreenUtil().setSp(20),
-                    fontWeight: FontWeight.bold,
-                  ),);
+                  );
+                } else {
+                  List<NickModel> nickname = asyncSnapshot.data!;
+                  return Container(
+                    child: Text('${nickname[0].nickname}님,\n오늘도 건강한 하루 되세요!', textAlign: TextAlign.left,
+                      style: TextStyle(color: Colors.black,fontSize: ScreenUtil().setSp(20),
+                        fontWeight: FontWeight.bold,
+                      ),),
+                  );
+                }
               }
-            }
+          ),
         ),
         SizedBox(
           height: (MediaQuery.of(context).size.height * 0.03),
         ),
-        
-        Padding(
-          padding: const EdgeInsets.all(16.0),
+
+        Padding(//const EdgeInsets.all(16.0),
+          padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(16), ScreenUtil().setHeight(24), ScreenUtil().setWidth(16), ScreenUtil().setWidth(16)),
           child: ElevatedButton(
               onPressed: (){
             //챗봇으로 연결
@@ -152,7 +141,7 @@ Widget _buildmiddle(){
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-            margin: EdgeInsets.only(left: (MediaQuery.of(context).size.width * 0.065)),
+            margin: EdgeInsets.only(left: (MediaQuery.of(context).size.width * 0.063)),
             child: Text("최근 이벤트",
               style: TextStyle(
                 color: Color(0xff353535),
