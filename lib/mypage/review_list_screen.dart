@@ -42,83 +42,85 @@ class _review_list_screen extends State<review_list_screen> {
             fontWeight: FontWeight.w500,),
         ),
       ),
-      body: StreamBuilder<List<ReviewModel>>(
-          stream: streamReview(FirebaseAuth.instance.currentUser!.uid.toString()), // streamReview(review),
-          builder: (context, asyncSnapshot) {
-            if(!asyncSnapshot.hasData) {
-              return Container(
-                margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(48), ScreenUtil().setWidth(40), 0, 0),
-                child: Text("내가 쓴 후기가 없습니다.\n쉼터를 통해 의료적 지원을 받은 경험이 있다면 \n후기를 공유해주세요!",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Color(0xFF6B6B6B),
-                      fontSize: 14,
-              )
-                ),
-              );
-            } else if (asyncSnapshot.hasError){
-              return const Center(
-                child: Text('오류가 발생했습니다.'),);
-            } else {
-              List<ReviewModel> review = asyncSnapshot.data!;
-              return ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    itemCount: review.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          InkWell(
-                            child: Container(
-                                padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(16), ScreenUtil().setHeight(16), ScreenUtil().setWidth(16), ScreenUtil().setHeight(16)),
-                                decoration: BoxDecoration(
-                                    border: Border(bottom: BorderSide(
-                                        color: Colors.grey,
-                                        width: 1.0)),
-                                    color: Color(0xFFF3F3F3)
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(review[index].shelter_name,
-                                        style: TextStyle( color: Color(0XFF353535), fontSize: 16,)),
-                                    Container(
-                                      margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(0), ScreenUtil().setHeight(10), 0, 0),
-                                      child: Text(review[index].content,
-                                          style: TextStyle( color: Color(0XFF353535), fontSize: 12,)),
-                                    ),
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(0), ScreenUtil().setHeight(10), ScreenUtil().setWidth(0), ScreenUtil().setHeight(0)),
-                                                child: Image.asset('images/mylist_${review[index].hospital_id.toString()}.png', height: ScreenUtil().setHeight(16))
-                                          ),
-                                          Container(
-                                            margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(8), ScreenUtil().setHeight(12), ScreenUtil().setWidth(0), ScreenUtil().setHeight(0)),
-                                            child: Text(review[index].date,
-                                                style: TextStyle( color: Color(0XFF6B6B6B), fontSize: 10,)),
-                                          ),
-                                        ],
-                                    )
-                                  ],
-                                )
+      body: SingleChildScrollView(
+        child: StreamBuilder<List<ReviewModel>>(
+            stream: streamReview(FirebaseAuth.instance.currentUser!.uid.toString()), // streamReview(review),
+            builder: (context, asyncSnapshot) {
+              if(!asyncSnapshot.hasData) {
+                return Container(
+                  margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(48), ScreenUtil().setWidth(40), 0, 0),
+                  child: Text("내가 쓴 후기가 없습니다.\n쉼터를 통해 의료적 지원을 받은 경험이 있다면 \n후기를 공유해주세요!",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Color(0xFF6B6B6B),
+                        fontSize: 14,
+                )
+                  ),
+                );
+              } else if (asyncSnapshot.hasError){
+                return const Center(
+                  child: Text('오류가 발생했습니다.'),);
+              } else {
+                List<ReviewModel> review = asyncSnapshot.data!;
+                return ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      itemCount: review.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            InkWell(
+                              child: Container(
+                                  padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(16), ScreenUtil().setHeight(16), ScreenUtil().setWidth(16), ScreenUtil().setHeight(16)),
+                                  decoration: BoxDecoration(
+                                      border: Border(bottom: BorderSide(
+                                          color: Colors.grey,
+                                          width: 1.0)),
+                                      color: Color(0xFFF3F3F3)
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(review[index].shelter_name,
+                                          style: TextStyle( color: Color(0XFF353535), fontSize: 16,)),
+                                      Container(
+                                        margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(0), ScreenUtil().setHeight(10), 0, 0),
+                                        child: Text(review[index].content,
+                                            style: TextStyle( color: Color(0XFF353535), fontSize: 12,)),
+                                      ),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(0), ScreenUtil().setHeight(10), ScreenUtil().setWidth(0), ScreenUtil().setHeight(0)),
+                                                  child: Image.asset('images/mylist_${review[index].hospital_id.toString()}.png', height: ScreenUtil().setHeight(16))
+                                            ),
+                                            Container(
+                                              margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(8), ScreenUtil().setHeight(12), ScreenUtil().setWidth(0), ScreenUtil().setHeight(0)),
+                                              child: Text(review[index].date,
+                                                  style: TextStyle( color: Color(0XFF6B6B6B), fontSize: 10,)),
+                                            ),
+                                          ],
+                                      )
+                                    ],
+                                  )
+                              ),
+                              onTap: () => {
+                              Navigator.push(
+                              context, MaterialPageRoute(builder: (_) => map_detail(review[index].shelter_id)))
+                              },
                             ),
-                            onTap: () => {
-                            Navigator.push(
-                            context, MaterialPageRoute(builder: (_) => map_detail(review[index].shelter_id)))
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
+                          ],
+                        );
+                      },
+                    );
+              }
             }
-          }
+        ),
       ),
     );
   }

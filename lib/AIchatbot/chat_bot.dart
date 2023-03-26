@@ -200,7 +200,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
             backgroundImage: AssetImage("images/chatbot.png"),
           ),
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 14 * 3.2),
+            margin: const EdgeInsets.symmetric(horizontal: 18 * 3.2),
             padding: EdgeInsets.symmetric(
                 horizontal: ScreenUtil().setSp(15),
                 vertical: ScreenUtil().setSp(5)),
@@ -256,7 +256,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                         },
                         child: const Icon(
                           Icons.send,
-                          size: 16 * 1.8,
+                          size: 14 * 1.8,
                           color: Colors.grey,
                         )),
                     hintText: 'TeenHelper에게 건강관련 질문해보세요',

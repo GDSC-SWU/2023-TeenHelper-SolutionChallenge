@@ -43,82 +43,84 @@ class _scrap_screen extends State<scrap_screen> {
             fontWeight: FontWeight.w500,),
         ),
       ),
-      body: StreamBuilder<List<ScrapModel>>(
-          stream: streamScrap(), // streamReview(review),
-          builder: (context, asyncSnapshot) {
-            if(!asyncSnapshot.hasData) {
-              return Container(
-                margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(48), ScreenUtil().setWidth(40), 0, 0),
-                child: Text("즐겨찾는 쉼터가 없습니다.\n지도에서 즐겨찾는 쉼터를 추가해보세요!",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Color(0xFF6B6B6B),
-                      fontSize: 14,
-                    )
-                ),
-              );
-            } else if (asyncSnapshot.hasError){
-              return const Center(
-                child: Text('오류가 발생했습니다.'),);
-            } else {
-              List<ScrapModel> scrap = asyncSnapshot.data!;
-              return ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemCount: scrap.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      InkWell(
-                        child: Container(
-                            padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(16), ScreenUtil().setHeight(16), ScreenUtil().setWidth(16), ScreenUtil().setHeight(16)),
-                            decoration: BoxDecoration(
-                                border: Border(bottom: BorderSide(
-                                    color: Colors.grey,
-                                    width: 1.0)),
-                                color: Color(0xFFF3F3F3)
-                            ),
-                            width: ScreenUtil().setWidth(360),
-                            child: Row(
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(scrap[index].shelter_name,
-                                        style: TextStyle( color: Color(0XFF353535), fontSize: 16,)),
-                                    Container(
-                                      margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(0), ScreenUtil().setHeight(10), 0, 0),
-                                      child: Text(scrap[index].shelter_location,
-                                          style: TextStyle( color: Color(0XFF353535), fontSize: 12,)),
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  padding: EdgeInsets.only(left: ScreenUtil().setWidth(16)),
-                                  child: InkWell(
-                                    child: Image.asset(scrap[index].scrap == true ? 'images/staron_btn.png' : 'images/staroff_btn.png'),
-                                    onTap: () => {
-                                      scrapEdit(!scrap[index].scrap, scrap[index].shelter_id)
-                                    }
+      body: SingleChildScrollView(
+        child: StreamBuilder<List<ScrapModel>>(
+            stream: streamScrap(), // streamReview(review),
+            builder: (context, asyncSnapshot) {
+              if(!asyncSnapshot.hasData) {
+                return Container(
+                  margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(48), ScreenUtil().setWidth(40), 0, 0),
+                  child: Text("즐겨찾는 쉼터가 없습니다.\n지도에서 즐겨찾는 쉼터를 추가해보세요!",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Color(0xFF6B6B6B),
+                        fontSize: 14,
+                      )
+                  ),
+                );
+              } else if (asyncSnapshot.hasError){
+                return const Center(
+                  child: Text('오류가 발생했습니다.'),);
+              } else {
+                List<ScrapModel> scrap = asyncSnapshot.data!;
+                return ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemCount: scrap.length,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InkWell(
+                          child: Container(
+                              padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(16), ScreenUtil().setHeight(16), ScreenUtil().setWidth(16), ScreenUtil().setHeight(16)),
+                              decoration: BoxDecoration(
+                                  border: Border(bottom: BorderSide(
+                                      color: Colors.grey,
+                                      width: 1.0)),
+                                  color: Color(0xFFF3F3F3)
+                              ),
+                              width: ScreenUtil().setWidth(360),
+                              child: Row(
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(scrap[index].shelter_name,
+                                          style: TextStyle( color: Color(0XFF353535), fontSize: 16,)),
+                                      Container(
+                                        margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(0), ScreenUtil().setHeight(10), 0, 0),
+                                        child: Text(scrap[index].shelter_location,
+                                            style: TextStyle( color: Color(0XFF353535), fontSize: 12,)),
+                                      ),
+                                    ],
                                   ),
-                                )
-                              ],
-                            )
+                                  Container(
+                                    padding: EdgeInsets.only(left: ScreenUtil().setWidth(16)),
+                                    child: InkWell(
+                                      child: Image.asset(scrap[index].scrap == true ? 'images/staron_btn.png' : 'images/staroff_btn.png'),
+                                      onTap: () => {
+                                        scrapEdit(!scrap[index].scrap, scrap[index].shelter_id)
+                                      }
+                                    ),
+                                  )
+                                ],
+                              )
+                          ),
+                          onTap: () => {
+                            Navigator.push(
+                                context, MaterialPageRoute(builder: (_) => map_detail(scrap[index].shelter_id)))
+                          },
                         ),
-                        onTap: () => {
-                          Navigator.push(
-                              context, MaterialPageRoute(builder: (_) => map_detail(scrap[index].shelter_id)))
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
+                      ],
+                    );
+                  },
+                );
+              }
             }
-          }
+        ),
       ),
     );
   }

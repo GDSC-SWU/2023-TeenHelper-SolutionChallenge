@@ -18,7 +18,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'AddressModel.dart';
 //주소-> 위경도 값 변환 패키지
 import 'package:geocoding/geocoding.dart';
-//반응형 앱 코딩을 위해
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'mysql.dart';
 
@@ -62,6 +62,8 @@ class MapPracticeState extends State<MapPractice>{
   List<String> review_num=[];
   List<String> review_hospital=[];
   List<Widget> reviewButtons=[];
+  bool _isDraggableSheetVisible = false;
+  bool _islistex = false;
 
   //위치 권한 접근 조정하는 기능
   void _permission() async{
@@ -123,7 +125,10 @@ class MapPracticeState extends State<MapPractice>{
     setState(() {
       _myDataList = mydatalist;
     });
-    for(String address in _myDataList){
+    final shelterids = datalist.map((data) => data.shelter_id).toList();
+    for(int i=0; i<_myDataList.length; i++){
+      final address = _myDataList[i];
+      int shelterid = int.parse(shelterids[i]);
       try{
         List<Location> locations = await locationFromAddress(address);
         if(locations.isNotEmpty){
@@ -132,9 +137,11 @@ class MapPracticeState extends State<MapPractice>{
             markerId: MarkerId(address),
             position: latLng,
             icon:markerIcon,
-            infoWindow: InfoWindow(
-              title: address,
-            ),
+            onTap: (){
+              Navigator.push(
+                context, MaterialPageRoute(builder: (context) => map_detail(shelterid))
+              );
+            }
           );
           setState(() {
             _markers.add(marker);
@@ -164,26 +171,76 @@ class MapPracticeState extends State<MapPractice>{
   Future<void> searchingname() async{//검색창에 입력한 값 db에서 검색
     if(searchingword !=null && searchingword.isNotEmpty){
       var db = Mysql();
-      String sql = "select shelter_name, shelter_location, shelter_id from shelter where shelter_location like '%${searchingword}%';";
       var conn = await db.getConnection();
-      final results = await conn.query(sql);
+      String sql1 = "select shelter_name, shelter_location, shelter_id from shelter where shelter_location like '%${searchingword}%';";
+      String sql2 = "select distinct shelter_name from hospital;";
+      final results = await conn.query(sql1);
       final namelists = results.map((row) => row[0] as String).toList();
       final loclists = results.map((row) => row[1] as String).toList();
       final idlists = results.map((row) => row[2] as int).toList();
       setState(() {
+        _isDraggableSheetVisible = true;
         _names = namelists;
         _locations = loclists;
         _shelterId = idlists;
       });
+      final results1 = await conn.query(sql2);
+      final allList = results1.map((row) => row[0] as String).toList();//원본리스트
+      bool hascommon = _names.any((element) => allList.contains(element));
+      if(hascommon){
+        for(int i=0; i<_names.length; i++) {
+          String sql3 = "select s.shelter_name, s.shelter_location, s.shelter_id, h.hospital_subject, h.review_cnt, h.shelter_name from shelter s, hospital h where s.shelter_name='${_names[i]}' and s.shelter_name = h.shelter_name order by h.review_cnt desc;";
+          final results2 = await conn.query(sql3);
 
+          final numbersList = results2.map((row) => row[4].toString() as String)
+              .toList();
+          final hospitalsList = results2.map((row) => row[3].toString() as String)
+              .toList();
+          review_num.addAll(numbersList);
+          review_hospital.addAll(hospitalsList);
+        }
+      }
+      else{
+        review_num = [];
+        review_hospital=[];
+      }
     }
-    await Showreview();
   }
 
   Future<void> searchingtag() async{//태그 정보를 db에서 조회 리스트 저장
-    if(id!=null){
+    if(id!=null && id !=0){
       var db = Mysql();
-      String sql = "select shelter_name, shelter_location, shelter_id from hospital where hospital_id=${id};";
+      String sql1 = "select shelter_name, shelter_location, shelter_id from hospital where hospital_id=${id};";
+      String sql2 = "select distinct shelter_name from hospital;";
+      var conn = await db.getConnection();
+      final results1 = await conn.query(sql1);
+      final tagnames = results1.map((row) => row[0] as String).toList();
+      final taglocs=results1.map((row) => row[1] as String).toList();
+      final tagid = results1.map((row) => row[2] as int).toList();
+      setState(() {
+        _names = tagnames;
+        _locations = taglocs;
+        _shelterId = tagid;
+      });
+      final sql2_result = await conn.query(sql2);
+      final allList = sql2_result.map((row) => row[0] as String).toList();
+      bool hascommon = _names.any((element) => allList.contains(element));
+      if(hascommon){
+      for(int i=0; i<_names.length; i++) {
+      String sql3 = "select s.shelter_name, s.shelter_location, s.shelter_id, h.hospital_subject, h.review_cnt, h.shelter_name from shelter s, hospital h where s.shelter_name='${_names[i]}' and s.shelter_name = h.shelter_name order by h.review_cnt desc;";
+      final sql3_results = await conn.query(sql3);
+      final numbersList = sql3_results.map((row) => row[4].toString() as String)
+          .toList();
+      final hospitalsList = sql3_results.map((row) => row[3].toString() as String)
+          .toList();
+      review_num.addAll(numbersList);
+      review_hospital.addAll(hospitalsList);
+      }
+      }
+    }
+    else if(id==0){
+      var db = Mysql();
+      String sql = "select shelter_name, shelter_location, shelter_id from shelter;";
       var conn = await db.getConnection();
       final results = await conn.query(sql);
       final tagnames = results.map((row) => row[0] as String).toList();
@@ -194,25 +251,8 @@ class MapPracticeState extends State<MapPractice>{
         _locations = taglocs;
         _shelterId = tagid;
       });
-    }
-    await Showreview();
-  }
-  Future<void> Showreview() async{
-    if(_names.isNotEmpty && _names != null){
-      var db = Mysql();
-      var conn = await db.getConnection();
-      for(int i=0; i<_names.length; i++){
-        String sql = "select hospital_subject, shelter_name, review_cnt from hospital where shelter_name='${_names[i]}';";
-        final results = await conn.query(sql);
-        final numbersList = results.map((row) => row[2].toString() as String).toList();
-        final hospitalsList = results.map((row) => row[0].toString() as String).toList();
-        review_num.addAll(numbersList);
-        review_hospital.addAll(hospitalsList);
-      }
-      setState(() {
-        this.review_num = review_num;
-        this.review_hospital = review_hospital;
-      });
+      review_num = [];
+      review_hospital=[];
     }
   }
 
@@ -239,29 +279,26 @@ class MapPracticeState extends State<MapPractice>{
     _focusNode.addListener(() {setState(() {
       _isFocused = _focusNode.hasFocus;
     });});
-    //수상하면 지우기
-    //reviewButtons = _buildreview();
+
   }
   Future<void> _loadData() async{
     await searchingname();
-    await Showreview();
   }
 
   //구글맵 위젯---------------------
   Widget googlemap(){
     return GoogleMap(
-      mapType: _googleMapType,
-      initialCameraPosition: _initialCameraPosition,
-      onMapCreated: _onMapCreated,
-      myLocationEnabled: true,
-      //기본제공 내위치 버튼
-      myLocationButtonEnabled: false,
-      //확대축소 기본제공 버튼
-      zoomControlsEnabled: false,
-      zoomGesturesEnabled: true,
-      markers: _markers,
-    );
-
+        mapType: _googleMapType,
+        initialCameraPosition: _initialCameraPosition,
+        onMapCreated: _onMapCreated,
+        myLocationEnabled: true,
+        //기본제공 내위치 버튼
+        myLocationButtonEnabled: false,
+        //확대축소 기본제공 버튼
+        zoomControlsEnabled: false,
+        zoomGesturesEnabled: true,
+        markers: _markers,
+      );
   }
 
   //검색창 위젯--------------
@@ -286,6 +323,7 @@ class MapPracticeState extends State<MapPractice>{
 
           ),
             width: ScreenUtil().setWidth(328),
+            height: ScreenUtil().setHeight(44),
             child: TypeAheadField(
               textFieldConfiguration: TextFieldConfiguration(
                 controller: _searchController,
@@ -412,6 +450,7 @@ class MapPracticeState extends State<MapPractice>{
           ),
             child: ElevatedButton(onPressed: (){
               setState(() {
+                _isDraggableSheetVisible = true;
                 for(int i=0; i<_isSelected.length; i++){
                   _isSelected[i] = (i == index);
                 }
@@ -539,136 +578,145 @@ class MapPracticeState extends State<MapPractice>{
               ),
             ),
             //drawer
-            Visibility(visible: (searchingword.isNotEmpty && _suggestions != null) || (id!=0),
-              child: DraggableScrollableSheet(
-                initialChildSize: 0.39,
-                minChildSize: 0.39,
-                maxChildSize: 0.7,
-                builder:(BuildContext context, ScrollController myScrollController){
-                  return ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top:Radius.circular(20.0)),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                      ),
-                          child: Padding( padding:const EdgeInsets.only(top:30.0),
+              Visibility(visible: _isDraggableSheetVisible ,
+                child: DraggableScrollableSheet(
+                  initialChildSize: 0.39,
+                  minChildSize: 0.39,
+                  maxChildSize: 0.7,
+                  builder:(BuildContext context, ScrollController myScrollController){
+                    return ClipRRect(
+                      borderRadius: const BorderRadius.vertical(top:Radius.circular(20.0)),
+                      child:GestureDetector(
+                        onTap: (){
+                          setState(() {
+                            _isDraggableSheetVisible = false;
+                          });
+                        },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                        ),
+                            child: Padding( padding:const EdgeInsets.only(top:30.0),
 
-                            child: ListView.builder(
-                              controller: myScrollController,
-                              itemCount: _names.length,
-                              itemBuilder: (BuildContext context , int index){
-                                return Container(decoration: BoxDecoration(
-                                  border: Border.all(color: HexColor('#E9E9E9'),)
-                                ),
-                                  child: ListTile(
-                                    horizontalTitleGap: 16,
-                                    minVerticalPadding: 20,
-                                    shape: Border(bottom: BorderSide(color: HexColor('#E9E9E9'), width: 1.0)),
-                                    title:Text(_names[index],textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        fontSize: ScreenUtil().setSp(16.0),
-                                      ),),
-                                    subtitle: Padding(
-                                      padding: const EdgeInsets.only(top:4.0),
-                                      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                        children:[
-                                          Text(_locations[index],textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                                fontSize: ScreenUtil().setSp(12.0)
-                                            ),),
-                                          SizedBox(height: 8.0,),
-                                          Container(
-                                            child: Row(
-                                              children:[
-                                                if(index*3 <review_hospital.length)
-                                                  SizedBox(height:ScreenUtil().setHeight(28.0),
-                                                    child: Material(
-                                                      borderRadius: BorderRadius.circular(12.0),
-                                                      color: HexColor('#E9E9E9'),
-                                                      child: TextButton(
-                                                        onPressed: null,
-                                                        child:Text('${review_hospital[index*3]}연계 ${review_num[index*3]}',
-                                                        style: TextStyle(color:Colors.black, fontSize: ScreenUtil().setSp(10.0)),)
-                                                      ),
-                                                    ),
-                                                  ),
-                                                SizedBox(
-                                                  width: ScreenUtil().setWidth(4.0),
-                                                ),
-                                                if ((index * 3) + 1 < review_hospital.length)
-                                                  SizedBox(height:ScreenUtil().setHeight(28.0),
-                                                    child: Material(
-                                                      borderRadius: BorderRadius.circular(12.0),
-                                                      color: HexColor('#E9E9E9'),
-                                                      child: TextButton(
-                                                          onPressed: null,
-                                                          child:Text('${review_hospital[(index*3)+1]}연계 ${review_num[(index*3)+1]}',
-                                                            style: TextStyle(color:Colors.black, fontSize: ScreenUtil().setSp(10.0)),)
-                                                      ),
-                                                    ),
-                                                  ),
-                                                SizedBox(
-                                                  width: ScreenUtil().setWidth(4.0),
-                                                ),
-                                                if ((index * 3) + 2 < review_hospital.length)
-                                                  SizedBox(height:ScreenUtil().setHeight(28.0),
-                                                    child: Material(
-                                                      borderRadius: BorderRadius.circular(12.0),
-                                                      color: HexColor('#E9E9E9'),
-                                                      child: TextButton(
-                                                          onPressed: null,
-                                                          child:Text('${review_hospital[(index*3)+2]}연계 ${review_num[(index*3)+2]}',
-                                                            style: TextStyle(color:Colors.black, fontSize: ScreenUtil().setSp(10.0)),)
-                                                      ),
-                                                    ),
-                                                  ),
-                                              ]
-                                            ),
-                                          )
-                                          //Row(children: rowChildren,),
-                                        ],
-                                      ),
-                                    ),
-                                    trailing:  StreamBuilder<List<ScrapModel>>(
-                                        stream: streamScrap(_names[index]),
-                                        builder: (context, asyncSnapshot) {
-                                          if(asyncSnapshot.hasData && asyncSnapshot.data!.isNotEmpty) {
-                                            List<ScrapModel> scrap = asyncSnapshot.data!;
-                                            return InkWell(
-                                                child: Image.asset(scrap[0].scrap == true ? 'images/staron_btn.png' : 'images/staroff_btn.png'),
-                                                onTap: () => {
-                                                  scrapEdit(!scrap[0].scrap, _shelterId[index])
-                                                }
-                                            );
-                                          } else if (asyncSnapshot.hasError) {
-                                            return const Center(
-                                              child: Text('오류가 발생했습니다.'),);
-                                          } else {
-                                            return InkWell(
-                                              child: Image.asset('images/staroff_btn.png'),
-                                              onTap: () => {
-                                                scrapWrite(true, _names[index], _shelterId[index], _locations[index]),
-                                              },
-                                            );
-                                          }
-                                        }
-                                    ),
-                                    onTap: (){
-                                      Navigator.push(
-                                          context, MaterialPageRoute(builder: (_) =>map_detail(_shelterId[index])));
-                                      //상세페이지로 넘어가도록 명시
-                                    },
+                              child: _names.isNotEmpty ? ListView.builder(
+                                controller: myScrollController,
+                                itemCount: _names.length,
+                                itemBuilder: (BuildContext context , int index){
+                                  return Container(decoration: BoxDecoration(
+                                    border: Border.all(color: HexColor('#E9E9E9'),)
                                   ),
-                                );
-                              },),
-                          ),
+                                    child:ListTile(
+                                      horizontalTitleGap: 16,
+                                      minVerticalPadding: 20,
+                                      shape: Border(bottom: BorderSide(color: HexColor('#E9E9E9'), width: 1.0)),
+                                      title:Text(_names[index],textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          fontSize: ScreenUtil().setSp(16.0),
+                                        ),),
+                                      subtitle: Padding(
+                                        padding: const EdgeInsets.only(top:4.0),
+                                        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                          children:[
+                                            Text(_locations[index],textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                  fontSize: ScreenUtil().setSp(12.0)
+                                              ),),
+                                            SizedBox(height: 8.0,),
+                                            Container(
+                                              child: Row(
+                                                children:[
+                                                  if(index*3 <review_hospital.length && int.parse(review_num[index*3]) != 0)
+                                                    SizedBox(height:ScreenUtil().setHeight(28.0),
+                                                      child: Material(
+                                                        borderRadius: BorderRadius.circular(14.0),
+                                                        color: HexColor('#E9E9E9'),
+                                                        child: TextButton(
+                                                          onPressed: null,
+                                                          child:Text('${review_hospital[index*3]}연계 ${review_num[index*3]}',
+                                                          style: TextStyle(color:Colors.black, fontSize: ScreenUtil().setSp(10.0)),)
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  SizedBox(
+                                                    width: ScreenUtil().setWidth(4.0),
+                                                  ),
+                                                  if ((index * 3) + 1 < review_hospital.length && int.parse(review_num[(index*3)+1]) != 0)
+                                                    SizedBox(height:ScreenUtil().setHeight(28.0),
+                                                      child: Material(
+                                                        borderRadius: BorderRadius.circular(14.0),
+                                                        color: HexColor('#E9E9E9'),
+                                                        child: TextButton(
+                                                            onPressed: null,
+                                                            child:Text('${review_hospital[(index*3)+1]}연계 ${review_num[(index*3)+1]}',
+                                                              style: TextStyle(color:Colors.black, fontSize: ScreenUtil().setSp(10.0)),)
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  SizedBox(
+                                                    width: ScreenUtil().setWidth(4.0),
+                                                  ),
+                                                  if ((index * 3) + 2 < review_hospital.length && int.parse(review_num[(index*3)+2]) != 0)
+                                                    SizedBox(height:ScreenUtil().setHeight(28.0),
+                                                      child: Material(
+                                                        borderRadius: BorderRadius.circular(14.0),
+                                                        color: HexColor('#E9E9E9'),
+                                                        child: TextButton(
+                                                            onPressed: null,
+                                                            child:Text('${review_hospital[(index*3)+2]}연계 ${review_num[(index*3)+2]}',
+                                                              style: TextStyle(color:Colors.black, fontSize: ScreenUtil().setSp(10.0)),)
+                                                        ),
+                                                      ),
+                                                    ),
+                                                ]
+                                              ),
+                                            )
+                                            //Row(children: rowChildren,),
+                                          ],
+                                        ),
+                                      ),
+                                      trailing:  StreamBuilder<List<ScrapModel>>(
+                                          stream: streamScrap(_names[index]),
+                                          builder: (context, asyncSnapshot) {
+                                            if(asyncSnapshot.hasData && asyncSnapshot.data!.isNotEmpty) {
+                                              List<ScrapModel> scrap = asyncSnapshot.data!;
+                                              return InkWell(
+                                                  child: Image.asset(scrap[0].scrap == true ? 'images/staron_btn.png' : 'images/staroff_btn.png'),
+                                                  onTap: () => {
+                                                    scrapEdit(!scrap[0].scrap, _shelterId[index])
+                                                  }
+                                              );
+                                            } else if (asyncSnapshot.hasError) {
+                                              return const Center(
+                                                child: Text('오류가 발생했습니다.'),);
+                                            } else {
+                                              return InkWell(
+                                                child: Image.asset('images/staroff_btn.png'),
+                                                onTap: () => {
+                                                  scrapWrite(true, _names[index], _shelterId[index], _locations[index]),
+                                                },
+                                              );
+                                            }
+                                          }
+                                      ),
+                                      onTap: (){
+                                        Navigator.push(
+                                            context, MaterialPageRoute(builder: (_) =>map_detail(_shelterId[index])));
+                                        //상세페이지로 넘어가도록 명시
+                                      },
+                                    )
+                                  );
+                                },) : Center(
+                                  child:Text('아직 정보가 없습니다')
+                              )
+                            ),
 
 
-                    ),
-                  );
-                },),
+                      ),
+                      ));
+                  },),
 
-            ),
+              ),
+
           ],
         )
     );
