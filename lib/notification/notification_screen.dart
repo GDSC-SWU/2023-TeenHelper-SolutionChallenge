@@ -329,9 +329,7 @@ class _notificationState extends State<notification> {
           }));
 
   Future<void> sendPushNotification() async {
-    print("캬캬ㅑㅋ");
     try {
-      print("들어옴");
       final serverKey = dotenv.env['SERVER_KEY'];
       String? token = await FirebaseMessaging.instance.getToken();
       print(token);
