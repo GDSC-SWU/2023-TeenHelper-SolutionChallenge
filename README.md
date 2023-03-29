@@ -24,9 +24,18 @@ samples, guidance on mobile development, and a full API reference.
 
 
 ## How To Use
+![numone](https://user-images.githubusercontent.com/80136506/228526202-b2c45689-f891-4601-ab89-27ed233772ba.gif)
 
+![numtwo](https://user-images.githubusercontent.com/80136506/228526664-9d67f60e-1fd0-49a1-83c5-40982f57e1f9.gif)
 
-this area is for catchphrase
+![numthree](https://user-images.githubusercontent.com/80136506/228527381-7dfe8228-a8fb-4d42-a84c-1f66273cb753.gif)
 
+![numfour](https://user-images.githubusercontent.com/80136506/228527599-5d94e9f6-0f6d-410d-a176-1acc44306cfe.gif)
+
+![numfive](https://user-images.githubusercontent.com/80136506/228527606-5d0f6c96-fccc-4d3e-ad57-900801821003.gif)
+
+![numsix](https://user-images.githubusercontent.com/80136506/228527610-476744d9-6dd5-4261-8e6e-70db0282131f.gif)
+
+![numseven](https://user-images.githubusercontent.com/80136506/228527615-959ddacc-2321-458b-aa66-af989f8db831.gif)
 
 ## Contribution
