@@ -18,7 +18,7 @@ samples, guidance on mobile development, and a full API reference.
 
 
 ## Technology Stack
-
+![architecture](https://user-images.githubusercontent.com/80136506/228523239-7ec8d95e-137d-4fed-8d70-a01f6f038c85.png)
 
 ## Demo Video
 
