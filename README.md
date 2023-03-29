@@ -1,6 +1,9 @@
 # 2023 Solution Challenge - TeenHelper
 
 ## 🌱 About our Service
+TeenHelper provides information about shelters that offer medical care for out-of-home youth, making it easier for them to access these services. Instead of searching through scattered resources, TeenHelper brings together all the necessary information in a way that is easy for youth to understand. With TeenHelper, you can find shelters in your neighborhood using an map, and get important details such as hours of operation and phone numbers. You can even save your favorite shelters for future reference. In addition, TeenHelper can send you notifications about upcoming events and services from relevant organizations.
+
+TeenHelper also offers an AI chat feature that can answer health-related questions, providing teens with access to medical advice when they need it. By providing these resources and services, TeenHelper helps out-of-home youth design a healthier life.
 
 
 ## 🌱 Our Intention
@@ -14,6 +17,7 @@ Aligned with the UN Sustainable Development Goals of 'Good Health and Well-being
 
 ## 🛠 Technology Stack
 ![architecture](https://user-images.githubusercontent.com/80136506/228523239-7ec8d95e-137d-4fed-8d70-a01f6f038c85.png)
+
 
 ## 🎥 Demo Video
 
@@ -33,8 +37,9 @@ Aligned with the UN Sustainable Development Goals of 'Good Health and Well-being
 
 ![777](https://user-images.githubusercontent.com/80136506/228561637-dcaac3b9-d8ac-4e48-880b-f97ae5dfa793.gif)
 
+
 ## 👩🏻‍💻 Contribution
-| Name | title2 | Song Seung hee | title4 | Kang Yein |
+| Name | Bae Jiyun | Song Seung hee | title4 | Kang Yein |
 | --- | --- | --- |--- | --- |
-| Role | 2 | Frontend Developer | 4 | Frontend Developer |
-| Profile Image | 2 | <img src="https://user-images.githubusercontent.com/69308068/228529213-4227eb3f-af8a-4dbf-aa88-b81fe78a8878.jpg" width="200"/> | 4 | <img src="https://user-images.githubusercontent.com/69308068/228531463-de606e01-d506-4447-8520-cbf3e8128927.jpg" width="200"/> |
+| Role | Backend Developer | Frontend Developer | 4 | Frontend Developer |
+| Profile Image | <img src="https://user-images.githubusercontent.com/69308068/228570260-f8da23de-465c-4552-b763-fb470c8c1a37.jpg" width="200"/> | <img src="https://user-images.githubusercontent.com/69308068/228570000-77845e2f-85a9-4659-b7ab-e3358a8c088b.jpg" width="200"/> | 4 | <img src="https://user-images.githubusercontent.com/69308068/228531463-de606e01-d506-4447-8520-cbf3e8128927.jpg" width="200"/> |
