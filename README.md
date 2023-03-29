@@ -1,8 +1,9 @@
-# google
+# 2023 Solution Challenge - TeenHelper
 
-A new Flutter project.
+About our Service
 
-## Getting Started
+
+## Our Intention
 
 This project is a starting point for a Flutter application.
 
@@ -14,3 +15,18 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+
+## Technology Stack
+
+
+## Demo Video
+
+
+## How To Use
+
+
+this area is for catchphrase
+
+
+## Contribution
