@@ -4,6 +4,9 @@
 
 
 ## 🌱 Our Intention
+<p align = "center"><img src = "https://user-images.githubusercontent.com/80136506/228564927-01e5b7a4-ebc4-4811-99df-4f3b901d821a.png"></p>
+
+
 
 Aligned with the UN Sustainable Development Goals of 'Good Health and Well-being' and 'Reduced Inequalities', TeenHelper offers an app that connects homeless youth with medical shelters and gathers information about medical events and available resources.
 
@@ -18,7 +21,17 @@ Aligned with the UN Sustainable Development Goals of 'Good Health and Well-being
 ## 📱  How To Use
 ![numone](https://user-images.githubusercontent.com/80136506/228531156-80cbcd15-d19d-48c5-9aeb-79cfbea22842.gif)
 
+![teen](https://user-images.githubusercontent.com/80136506/228558234-4a8144da-26d2-477b-9414-05e02723a5e2.gif)
 
+![333](https://user-images.githubusercontent.com/80136506/228559621-cf3d4eb8-10a4-4093-9b61-30f051ec81f6.gif)
+
+![444](https://user-images.githubusercontent.com/80136506/228560262-4a20d013-e660-4585-adbd-15338ea3d455.gif)
+
+![5555](https://user-images.githubusercontent.com/80136506/228561068-c39ff5a8-c750-43b4-b891-56655bc99650.gif)
+
+![66](https://user-images.githubusercontent.com/80136506/228561390-96a62b80-def6-4c43-98d8-b67e8efdf367.gif)
+
+![777](https://user-images.githubusercontent.com/80136506/228561637-dcaac3b9-d8ac-4e48-880b-f97ae5dfa793.gif)
 
 ## 👩🏻‍💻 Contribution
 | Name | title2 | Song Seung hee | title4 | Kang Yein |
