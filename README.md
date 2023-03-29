@@ -1,6 +1,6 @@
 # 2023 Solution Challenge - TeenHelper
 
-About our Service
+<img src="https://user-images.githubusercontent.com/69308068/228518341-3c8997eb-1045-48b8-9b6e-12f2b91c3b3f.png.png" width="30" height="60"/>About our Service
 
 
 ## Our Intention
