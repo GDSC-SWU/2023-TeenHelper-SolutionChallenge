@@ -42,7 +42,7 @@ Aligned with the UN Sustainable Development Goals of 'Good Health and Well-being
 
 ![KakaoTalk_20230330_084235179](https://user-images.githubusercontent.com/80136506/228770009-bdba4b39-ab1e-4a5a-ac71-385a2aa4d2b8.png)
 ## 👩🏻‍💻 Contribution
-| Name | Bae Jiyun | Song Seung hee | title4 | Kang Yein |
+| Name | Bae Jiyun | Song Seung hee | Ahn Hyerim | Kang Yein |
 | --- | --- | --- |--- | --- |
 | Role | Backend Developer | Frontend Developer | UI/UX Designer | Frontend Developer |
-| Profile Image | <img src="https://user-images.githubusercontent.com/69308068/228570260-f8da23de-465c-4552-b763-fb470c8c1a37.jpg" width="200"/> | <img src="https://user-images.githubusercontent.com/69308068/228570000-77845e2f-85a9-4659-b7ab-e3358a8c088b.jpg" width="200"/> | 4 | <img src="https://user-images.githubusercontent.com/69308068/228531463-de606e01-d506-4447-8520-cbf3e8128927.jpg" width="200"/> |
+| Profile Image | <img src="https://user-images.githubusercontent.com/69308068/228570260-f8da23de-465c-4552-b763-fb470c8c1a37.jpg" width="200"/> | <img src="https://user-images.githubusercontent.com/69308068/228570000-77845e2f-85a9-4659-b7ab-e3358a8c088b.jpg" width="200"/> | <img src="https://user-images.githubusercontent.com/69308068/228854306-d2460b79-5bed-4a94-b28b-c60cf29ed939.jpg" width="200"/> | <img src="https://user-images.githubusercontent.com/69308068/228531463-de606e01-d506-4447-8520-cbf3e8128927.jpg" width="200"/> |
