@@ -16,13 +16,15 @@ Aligned with the UN Sustainable Development Goals of 'Good Health and Well-being
 
 
 ## 🛠 Technology Stack
-![architecture](https://user-images.githubusercontent.com/80136506/228523239-7ec8d95e-137d-4fed-8d70-a01f6f038c85.png)
+
+![12435](https://user-images.githubusercontent.com/80136506/228771359-40c5d34a-5ae8-4e27-8b73-f06ba7316145.png)
 
 
 ## 🎥 Demo Video
 
 
 ## 📱  How To Use
+
 ![numone](https://user-images.githubusercontent.com/80136506/228531156-80cbcd15-d19d-48c5-9aeb-79cfbea22842.gif)
 
 ![teen](https://user-images.githubusercontent.com/80136506/228558234-4a8144da-26d2-477b-9414-05e02723a5e2.gif)
@@ -38,8 +40,9 @@ Aligned with the UN Sustainable Development Goals of 'Good Health and Well-being
 ![777](https://user-images.githubusercontent.com/80136506/228561637-dcaac3b9-d8ac-4e48-880b-f97ae5dfa793.gif)
 
 
+![KakaoTalk_20230330_084235179](https://user-images.githubusercontent.com/80136506/228770009-bdba4b39-ab1e-4a5a-ac71-385a2aa4d2b8.png)
 ## 👩🏻‍💻 Contribution
 | Name | Bae Jiyun | Song Seung hee | title4 | Kang Yein |
 | --- | --- | --- |--- | --- |
-| Role | Backend Developer | Frontend Developer | 4 | Frontend Developer |
+| Role | Backend Developer | Frontend Developer | UI/UX Designer | Frontend Developer |
 | Profile Image | <img src="https://user-images.githubusercontent.com/69308068/228570260-f8da23de-465c-4552-b763-fb470c8c1a37.jpg" width="200"/> | <img src="https://user-images.githubusercontent.com/69308068/228570000-77845e2f-85a9-4659-b7ab-e3358a8c088b.jpg" width="200"/> | 4 | <img src="https://user-images.githubusercontent.com/69308068/228531463-de606e01-d506-4447-8520-cbf3e8128927.jpg" width="200"/> |
