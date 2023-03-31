@@ -21,7 +21,7 @@ Aligned with the UN Sustainable Development Goals of 'Good Health and Well-being
 
 
 ## 🎥 Demo Video
-
+[<img width="100%" src="https://user-images.githubusercontent.com/69308068/229088065-4d09e6a2-1aab-4dc1-99e3-eab826a39f52.png"/>](https://youtu.be/a0_zjgBqYKQ)
 
 ## 📱  How To Use
 
