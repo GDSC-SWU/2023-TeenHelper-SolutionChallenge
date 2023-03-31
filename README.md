@@ -44,6 +44,7 @@ Aligned with the UN Sustainable Development Goals of 'Good Health and Well-being
 
 ## 💻 How to run
 ※ This app only works on Android OS.
+
 [Download APK File](이곳에 파일위치기입)
 
 ## 👩🏻‍💻 Contribution
