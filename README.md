@@ -41,6 +41,11 @@ Aligned with the UN Sustainable Development Goals of 'Good Health and Well-being
 
 
 ![KakaoTalk_20230330_084235179](https://user-images.githubusercontent.com/80136506/228770009-bdba4b39-ab1e-4a5a-ac71-385a2aa4d2b8.png)
+
+## 💻 How to run
+※ This app only works on Android OS.
+[Download APK File](이곳에 파일위치기입)
+
 ## 👩🏻‍💻 Contribution
 | Name | Bae Jiyun | Song Seung hee | Ahn Hyerim | Kang Yein |
 | --- | --- | --- |--- | --- |
