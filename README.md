@@ -51,5 +51,5 @@ Aligned with the UN Sustainable Development Goals of 'Good Health and Well-being
 ## 👩🏻‍💻 Contribution
 | Name | Bae Jiyun | Song Seung hee | Ahn Hyerim | Kang Yein |
 | --- | --- | --- |--- | --- |
-| Role | PM/Backend Developer | Frontend Developer | UI/UX Designer | Frontend Developer |
+| Role | PM/ Flutter/ Backend | Frontend Developer | UI/UX Designer | Frontend Developer |
 | Profile Image | <img src="https://user-images.githubusercontent.com/69308068/228570260-f8da23de-465c-4552-b763-fb470c8c1a37.jpg" width="200"/> | <img src="https://user-images.githubusercontent.com/69308068/228570000-77845e2f-85a9-4659-b7ab-e3358a8c088b.jpg" width="200"/> | <img src="https://user-images.githubusercontent.com/69308068/228854306-d2460b79-5bed-4a94-b28b-c60cf29ed939.jpg" width="200"/> | <img src="https://user-images.githubusercontent.com/69308068/228531463-de606e01-d506-4447-8520-cbf3e8128927.jpg" width="200"/> |
