@@ -39,6 +39,9 @@ Aligned with the UN Sustainable Development Goals of 'Good Health and Well-being
 
 <img width="100%" src="https://user-images.githubusercontent.com/80136506/228561637-dcaac3b9-d8ac-4e48-880b-f97ae5dfa793.gif"/>
 
+## ERD
+![TeenHelperDB](https://github.com/songseunghei/Nonggle/assets/80136506/16e01cef-d5e3-4dfd-ab40-7cd4540d7da8)
+
 
 ![KakaoTalk_20230330_084235179](https://user-images.githubusercontent.com/80136506/228770009-bdba4b39-ab1e-4a5a-ac71-385a2aa4d2b8.png)
 
